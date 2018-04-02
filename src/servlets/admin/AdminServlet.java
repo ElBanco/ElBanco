@@ -3,6 +3,8 @@ package servlets.admin;
 import java.io.IOException;
 import java.util.Date;
 import model.beans.*;
+import model.services.*;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -64,7 +66,7 @@ public class AdminServlet extends HttpServlet{
 		// TODO Auto-generated method stub
 		Usuario newUser = createUser(req);
 		if(newUser != null && req.getParameter("cantidadDinero") != null){
-			new DBInteractions().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
+			new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
 		}
 		req.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(req, resp);
 	}

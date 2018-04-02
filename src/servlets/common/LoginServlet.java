@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.DBInteractions;
 import model.beans.*;
+import model.services.UserService;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -28,10 +28,7 @@ public class LoginServlet extends HttpServlet {
 		}
 		
 		PrintWriter out = resp.getWriter();
-		DBInteractions db = new DBInteractions();
-		
-		
-		Usuario user = db.authenticate(username, password);
+		Usuario user = new UserService().authenticate(username, password);
 
 		if(user != null){
 			req.getSession().setAttribute("user", user);
