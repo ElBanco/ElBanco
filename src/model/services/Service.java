@@ -60,13 +60,18 @@ public abstract class Service {
 		try {
 			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);
-			return handler.handle(conn);
+			if(handler.handle(conn)){
+				conn.commit();
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return rollBack(conn);
 		}finally{
 			closeConn(conn);
 		}
+		
+		return rollBack(conn);
 	}
 	
 	<T> T doSelect(SingleResultHandler<T> handler){

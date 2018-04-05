@@ -53,8 +53,6 @@ public class OperationService extends Service{
 					accountDAO.updateBalance(sourceAccount, sourceAccount.getSaldo() - amount);
 					accountDAO.updateBalance(destinationAccount, destinationAccount.getSaldo() + amount);
 					
-					
-					conn.commit();
 					return true;
 				}
 				
