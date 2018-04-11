@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import model.beans.*;
@@ -18,29 +19,40 @@ public class CuentaDAO extends DAO{
 	}
 
 
-	private final String INSERT = "INSERT INTO Cuenta (" +
+	private final String INSERT_CUENTA = "INSERT INTO Cuenta (" +
 											"NombreUsuario, " +
 											"Saldo, " + 
+											"LimiteDiario, " +
+											"LimiteInferior, " +
 											"FechaCreacion, " +
 											"FechaModificacion) " +
-											"VALUES (?, ?, NOW(), NOW());";
+											"VALUES (?, ?, ?, ?, ?, ?);";
 	
 	private final String LIST_BY_USER = "SELECT * FROM Cuenta WHERE NombreUsuario=?;";
 	
-	private final String UPDATE_SALDO = "UPDATE Cuenta SET Saldo=?, FechaModificacion=NOW() WHERE NumeroCuenta=?;";
+	private final String UPDATE_SALDO = "UPDATE Cuenta SET Saldo=?, FechaModificacion=? WHERE NumeroCuenta=?;";
 	
 	private final String GET = "SELECT * FROM Cuenta WHERE NumeroCuenta=?;";
 	
-
+	private final String UPDATE_USER = "UPDATE Cuenta SET NombreUsuario=?, FechaModificacion=? WHERE NumeroCuenta=?;";
 	
+	private final String UPDATE_BAJA = "UPDATE Cuenta SET FechaBaja=?, FechaModificacion=? WHERE NumeroCuenta=?;";
+	
+
 	public void addCuenta(Cuenta newAccount) throws SQLException{
 		
-		PreparedStatement stmt = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement stmt = conn.prepareStatement(INSERT_CUENTA, Statement.RETURN_GENERATED_KEYS);
+		GregorianCalendar calendar = new GregorianCalendar();
 		
 		stmt.setString(1, newAccount.getNombreUsuario());
 		stmt.setString(2, String.valueOf(newAccount.getSaldo())); 
+		stmt.setDouble(3, newAccount.getLimiteDiario());
+		stmt.setDouble(4, newAccount.getLimiteInferior());
+		stmt.setDate(5, new java.sql.Date(calendar.getTime().getTime()));
+		stmt.setDate(6, new java.sql.Date(calendar.getTime().getTime()));
 		
 		stmt.executeUpdate();
+		
 		ResultSet rs = stmt.getGeneratedKeys();
 		if (rs != null && rs.next()) {
 		    newAccount.setNumeroCuenta(rs.getInt(1));
@@ -49,6 +61,7 @@ public class CuentaDAO extends DAO{
 		stmt.close();
 		
 	}
+	
 	
 	public List<Cuenta> listByUser(Usuario user) throws SQLException{
 		
@@ -79,11 +92,14 @@ public class CuentaDAO extends DAO{
 	public void updateBalance(Cuenta account, double balance) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(UPDATE_SALDO);
+		GregorianCalendar calendar = new GregorianCalendar();
+		
 		stmt.setDouble(1, balance);
 		stmt.setInt(2, account.getNumeroCuenta());
+		stmt.setDate(3, new java.sql.Date(calendar.getTime().getTime()));
+		
 		stmt.executeUpdate();
 		stmt.close();
-		
 	}
 	
 	
@@ -108,6 +124,30 @@ public class CuentaDAO extends DAO{
 		
 	}
 	
-	
+	public void updateUser(Usuario user, Cuenta account) throws SQLException{
+		
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_USER);
+		GregorianCalendar calendar = new GregorianCalendar();
+
+		stmt.setString(1, user.getNombreUsuario());
+		stmt.setDate(2, new java.sql.Date(calendar.getTime().getTime()));
+		stmt.setInt(3, account.getNumeroCuenta());
+		
+		stmt.executeUpdate();
+		stmt.close();
+	}
+
+	public void darBaja(Cuenta account) throws SQLException{
+		
+			PreparedStatement stmt = conn.prepareStatement(UPDATE_BAJA);
+			GregorianCalendar calendar = new GregorianCalendar();
+			
+			stmt.setDate(1, new java.sql.Date(calendar.getTime().getTime()));
+			stmt.setDate(2, new java.sql.Date(calendar.getTime().getTime()));;
+			stmt.setInt(3, account.getNumeroCuenta());;
+			
+			stmt.executeUpdate();
+			stmt.close();
+	}
 	
 }

@@ -11,15 +11,15 @@ import model.dao.*;
 
 public class UserService extends Service{
 	
-	
 	public Usuario authenticate(final String username, final String password){
-		
 		
 		SingleResultHandler<Usuario> handler = new SingleResultHandler<Usuario>() {
 			@Override
 			public Usuario handle(Connection conn) throws SQLException {
+				
 				conn = dataSource.getConnection();
 				UsuarioDAO userDAO = new UsuarioDAO(conn);
+				
 				return userDAO.authenticate(username, password);
 			}
 		};
@@ -33,14 +33,15 @@ public class UserService extends Service{
 		SingleResultHandler<Usuario> handler = new SingleResultHandler<Usuario>() {
 			@Override
 			public Usuario handle(Connection conn) throws SQLException {
+				
 				conn = dataSource.getConnection();
 				UsuarioDAO userDAO = new UsuarioDAO(conn);
+				
 				return userDAO.getUser(username);
 			}
 		};
 		
 		return doSelect(handler);
-
 	}
 	
 	public boolean addNewUser(final Usuario newUser, final Double initialAmount){
@@ -61,6 +62,7 @@ public class UserService extends Service{
 				originalAccount.setSaldo(initialAmount);
 				accountDAO.addCuenta(originalAccount);
 				
+				
 				Monedero monedero = new Monedero();
 				monedero.setNombreUsuario(newUser.getNombreUsuario());
 				monedero.setPin("6666"); // cambiar a número aleatorio
@@ -75,4 +77,24 @@ public class UserService extends Service{
 
 	}
 
+	public boolean darBajaUser(final String nombreUsuario) {
+		// TODO Auto-generated method stub
+		UpdateHandler handler = new UpdateHandler() {
+			
+			@Override
+			public boolean handle(Connection conn) throws SQLException {
+				// TODO Auto-generated method stub
+				UsuarioDAO userDAO = new UsuarioDAO(conn);
+				Usuario user = userDAO.getUser(nombreUsuario);
+
+				if (user != null) {
+					
+					userDAO.darBaja(user);
+				}
+				
+				return true;
+			}
+		};
+		return doTransaction(handler);
+	}
 }
