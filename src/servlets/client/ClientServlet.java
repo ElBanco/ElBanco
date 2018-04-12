@@ -34,6 +34,7 @@ public class ClientServlet extends HttpServlet{
 		
 		Double cantidad;
 		int numeroCuentaDestino;
+		String actionValue = req.getParameter("action");
 		
 		Usuario user = (Usuario) req.getSession().getAttribute("user");
 		List<Cuenta> cuentas = new AccountService().getAccounts(user);
@@ -43,6 +44,16 @@ public class ClientServlet extends HttpServlet{
 			cantidad = Double.valueOf(req.getParameter("cantidad"));
 			numeroCuentaDestino = Integer.valueOf(req.getParameter("numeroCuentaDestino"));
 			new OperationService().doTransference(numeroCuentaOrigen, numeroCuentaDestino, cantidad);
+		}
+		else if(actionValue.equals("cambiarLimitesCuenta")){
+			
+			int numeroCuenta = Integer.parseInt(req.getParameter("numeroCuenta"));
+			String limiteInferior = req.getParameter("limiteInferior");
+			String limiteDiario = req.getParameter("limiteDiario");
+			
+			new AccountService().cambiarLimiteInferior(req.getParameter("limiteInferior"));
+			
+			new AccountService()
 		}
 		
 		doGet(req, resp);

@@ -30,6 +30,15 @@
          <p>saldo: ${cuenta.saldo}</p>
       </c:forEach>
 	
+	<h2>Cambiar Limites</h2>
+	<form action="/ElBanco/client" method="POST">
+	
+		Numero de Cuenta : <input name="numeroCuenta" type="text"/> <br />
+		Limite Diario : <input name="limiteDiario" type="text"/> <br />
+		Limite Inferior: <input name="limiteInferior" type="text"/> <br />
+		
+		<input type="submit" name = "action" value="cambiarLimiteCuenta"/>
+	</form>
 	
 	<form action="/ElBanco/logout" method="GET">
 		<input value="LOGOUT" type="submit" />

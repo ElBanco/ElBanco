@@ -43,13 +43,17 @@ public class CuentaDAO extends DAO{
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT_CUENTA, Statement.RETURN_GENERATED_KEYS);
 		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
 		
 		stmt.setString(1, newAccount.getNombreUsuario());
 		stmt.setString(2, String.valueOf(newAccount.getSaldo())); 
 		stmt.setDouble(3, newAccount.getLimiteDiario());
 		stmt.setDouble(4, newAccount.getLimiteInferior());
-		stmt.setDate(5, new java.sql.Date(calendar.getTime().getTime()));
-		stmt.setDate(6, new java.sql.Date(calendar.getTime().getTime()));
+		stmt.setDate(5, currentDate);
+		stmt.setDate(6, currentDate);
+		
+		newAccount.setFechaCreacion(currentDate);
+		newAccount.setFechaModificacion(currentDate);
 		
 		stmt.executeUpdate();
 		
@@ -98,6 +102,8 @@ public class CuentaDAO extends DAO{
 		stmt.setInt(2, account.getNumeroCuenta());
 		stmt.setDate(3, new java.sql.Date(calendar.getTime().getTime()));
 		
+		account.setSaldo(balance);
+		
 		stmt.executeUpdate();
 		stmt.close();
 	}
@@ -144,7 +150,7 @@ public class CuentaDAO extends DAO{
 			
 			stmt.setDate(1, new java.sql.Date(calendar.getTime().getTime()));
 			stmt.setDate(2, new java.sql.Date(calendar.getTime().getTime()));;
-			stmt.setInt(3, account.getNumeroCuenta());;
+			stmt.setInt(3, account.getNumeroCuenta());
 			
 			stmt.executeUpdate();
 			stmt.close();

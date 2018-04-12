@@ -64,6 +64,7 @@ public class TarjetaDAO extends DAO{
 			
 		PreparedStatement stmt;
 		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
 		
 		if(newCard instanceof Monedero){
 			
@@ -74,7 +75,8 @@ public class TarjetaDAO extends DAO{
 			stmt.setString(2, newMonederoCard.getNombreUsuario());
 			stmt.setDouble(3, newMonederoCard.getSaldo()); 
 			stmt.setDouble(4, newMonederoCard.getLimiteSuperior());
-			stmt.setDate(5, new java.sql.Date(calendar.getTime().getTime()));
+			stmt.setDate(5, currentDate);
+			newCard.setFechaCreacion(currentDate);
 		}
 		
 		else if(newCard instanceof TarjetaDebito){
@@ -87,9 +89,11 @@ public class TarjetaDAO extends DAO{
 			stmt.setDate(2, fechaCaducidad);
 			stmt.setString(3, newDebitCard.getTitular());
 			stmt.setDouble(4, newDebitCard.getLimiteDiario()); 
-			stmt.setDate(5, new java.sql.Date(calendar.getTime().getTime()));
+			stmt.setDate(5, currentDate);
 			stmt.setInt(6,  newDebitCard.getNumeroCuenta());
 			stmt.setDouble(7, newDebitCard.getLimiteSuperior());
+			newDebitCard.setFechaCreacion(currentDate);
+			newDebitCard.setFechaCaducidad(fechaCaducidad);
 			
 			
 		}

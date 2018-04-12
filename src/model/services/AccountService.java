@@ -62,25 +62,20 @@ public class AccountService extends Service{
 			public boolean handle(Connection conn) throws SQLException {
 				// TODO Auto-generated method stub
 				
-				UsuarioDAO userDAO = new UsuarioDAO(conn);	
 				
-				if (userDAO.getUser(newAccount.getNombreUsuario()) != null){ //Existe el usuario
-					
-					CuentaDAO accountDAO = new CuentaDAO(conn);
-					TarjetaDAO cardDAO = new TarjetaDAO(conn);
-					
-					accountDAO.addCuenta(newAccount);
+				CuentaDAO accountDAO = new CuentaDAO(conn);
+				TarjetaDAO cardDAO = new TarjetaDAO(conn);
 				
-					TarjetaDebito debitCard = new TarjetaDebito();
-					debitCard.setPin("6666"); // cambiar a número aleatorio
-					debitCard.setLimiteDiario(newAccount.getLimiteDiario());
-					debitCard.setNumeroCuenta(newAccount.getNumeroCuenta());
-					debitCard.setTitular(newAccount.getNombreUsuario());
-					
-					cardDAO.addTarjeta(debitCard);
-				}else{
-					return false;
-				}
+				accountDAO.addCuenta(newAccount);
+			
+				TarjetaDebito debitCard = new TarjetaDebito();
+				debitCard.setPin("6666"); // cambiar a número aleatorio
+				debitCard.setLimiteDiario(newAccount.getLimiteDiario());
+				debitCard.setNumeroCuenta(newAccount.getNumeroCuenta());
+				debitCard.setTitular(newAccount.getNombreUsuario());
+				
+				cardDAO.addTarjeta(debitCard);
+				
 				return true;
 			}
 		};
@@ -106,7 +101,6 @@ public class AccountService extends Service{
 			}
 		};
 		return doTransaction(handler);
-		
 	}
 
 }
