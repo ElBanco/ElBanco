@@ -106,4 +106,51 @@ public class CardService extends Service{
 		
 		return doTransaction(handler);
 	}
+
+	public boolean cambiarLimiteMonederoSuperior(final String nombreUsuario,
+			final Double limiteSuperior) {
+		
+		UpdateHandler handler = new UpdateHandler() {
+			
+			@Override
+			public boolean handle(Connection conn) throws SQLException {
+				
+				TarjetaDAO cardDAO = new TarjetaDAO(conn);
+				
+				return cardDAO.cambiarLimiteMonederoSuperior(nombreUsuario, limiteSuperior);
+			}
+		};
+		return doTransaction(handler);
+	}
+
+	public boolean cambiarLimiteDebitoSuperior(final int numeroTarjeta, 
+			final Double limiteSuperior) {
+		
+		UpdateHandler handler = new UpdateHandler() {
+		
+		@Override
+		public boolean handle(Connection conn) throws SQLException {
+			
+			TarjetaDAO cardDAO = new TarjetaDAO(conn);
+			
+			return cardDAO.cambiarLimiteDebitoSuperior(numeroTarjeta, limiteSuperior);
+			}
+		};
+		return doTransaction(handler);
+	}
+
+	public boolean cambiarLimiteDebitoDiario(final int numeroTarjeta, final Double limiteDiario) {
+		
+		UpdateHandler handler = new UpdateHandler() {
+		
+		@Override
+		public boolean handle(Connection conn) throws SQLException {
+			
+			TarjetaDAO cardDAO = new TarjetaDAO(conn);
+			
+			return cardDAO.cambiarLimiteDebitoDiario(numeroTarjeta, limiteDiario);
+			}
+		};
+		return doTransaction(handler);
+	}
 }

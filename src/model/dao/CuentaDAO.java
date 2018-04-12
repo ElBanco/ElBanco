@@ -38,12 +38,16 @@ public class CuentaDAO extends DAO{
 	
 	private final String UPDATE_BAJA = "UPDATE Cuenta SET FechaBaja=?, FechaModificacion=? WHERE NumeroCuenta=?;";
 	
+	private final String UPDATE_LIMITE_INFERIOR = "UPDATE Cuenta SET LimiteInferior=?, FechaModificacion=? WHERE NumeroCuenta=?;";
+	
+	private final String UPDATE_LIMITE_DIARIO = "UPDATE Cuenta SET LimiteDiario=?, FechaModificacion=? WHERE NumeroCuenta=?;";
+	
 
 	public void addCuenta(Cuenta newAccount) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT_CUENTA, Statement.RETURN_GENERATED_KEYS);
 		GregorianCalendar calendar = new GregorianCalendar();
-		java.sql.Date currentDate = new java.sql.Date(calendar.getTime().getTime());
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
 		
 		stmt.setString(1, newAccount.getNombreUsuario());
 		stmt.setString(2, String.valueOf(newAccount.getSaldo())); 
@@ -97,10 +101,11 @@ public class CuentaDAO extends DAO{
 		
 		PreparedStatement stmt = conn.prepareStatement(UPDATE_SALDO);
 		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
 		
 		stmt.setDouble(1, balance);
 		stmt.setInt(2, account.getNumeroCuenta());
-		stmt.setDate(3, new java.sql.Date(calendar.getTime().getTime()));
+		stmt.setDate(3, currentDate);
 		
 		account.setSaldo(balance);
 		
@@ -134,9 +139,10 @@ public class CuentaDAO extends DAO{
 		
 		PreparedStatement stmt = conn.prepareStatement(UPDATE_USER);
 		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
 
 		stmt.setString(1, user.getNombreUsuario());
-		stmt.setDate(2, new java.sql.Date(calendar.getTime().getTime()));
+		stmt.setDate(2, currentDate);
 		stmt.setInt(3, account.getNumeroCuenta());
 		
 		stmt.executeUpdate();
@@ -145,15 +151,46 @@ public class CuentaDAO extends DAO{
 
 	public void darBaja(Cuenta account) throws SQLException{
 		
-			PreparedStatement stmt = conn.prepareStatement(UPDATE_BAJA);
-			GregorianCalendar calendar = new GregorianCalendar();
-			
-			stmt.setDate(1, new java.sql.Date(calendar.getTime().getTime()));
-			stmt.setDate(2, new java.sql.Date(calendar.getTime().getTime()));;
-			stmt.setInt(3, account.getNumeroCuenta());
-			
-			stmt.executeUpdate();
-			stmt.close();
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_BAJA);
+		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
+		
+		stmt.setDate(1, currentDate);
+		stmt.setDate(2, currentDate); //Deberia cambiarse esto?
+		stmt.setInt(3, account.getNumeroCuenta());
+		
+		stmt.executeUpdate();
+		stmt.close();
+	}
+
+
+	public void cambiarLimiteInferior(Cuenta account, Double limiteInferior) throws SQLException{
+		
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_LIMITE_INFERIOR);
+		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
+		
+		stmt.setDouble(1, limiteInferior);
+		stmt.setDate(2, currentDate);
+		stmt.setInt(3, account.getNumeroCuenta());
+		
+		stmt.executeUpdate();
+		stmt.close();
+	}
+
+
+	public void cambiarLimiteDiario(Cuenta account, Double limiteDiario) throws SQLException{
+		
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_LIMITE_DIARIO);
+		GregorianCalendar calendar = new GregorianCalendar();
+		java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
+		
+		stmt.setDouble(1, limiteDiario);
+		stmt.setDate(2, currentDate);
+		stmt.setInt(3, account.getNumeroCuenta());
+		
+		stmt.executeUpdate();
+		stmt.close();
 	}
 	
 }

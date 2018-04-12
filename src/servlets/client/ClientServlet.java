@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import model.beans.*;
 import model.services.AccountService;
+import model.services.CardService;
 import model.services.OperationService;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/client")
 public class ClientServlet extends HttpServlet{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -45,17 +51,41 @@ public class ClientServlet extends HttpServlet{
 			numeroCuentaDestino = Integer.valueOf(req.getParameter("numeroCuentaDestino"));
 			new OperationService().doTransference(numeroCuentaOrigen, numeroCuentaDestino, cantidad);
 		}
-		else if(actionValue.equals("cambiarLimitesCuenta")){
+		else if(actionValue.equals("cambiarLimiteCuentaInferior")){
 			
 			int numeroCuenta = Integer.parseInt(req.getParameter("numeroCuenta"));
-			String limiteInferior = req.getParameter("limiteInferior");
-			String limiteDiario = req.getParameter("limiteDiario");
+			Double limiteInferior = Double.parseDouble(req.getParameter("limiteInferior"));
 			
-			new AccountService().cambiarLimiteInferior(req.getParameter("limiteInferior"));
+			new AccountService().cambiarLimiteInferior(numeroCuenta, limiteInferior);
 			
-			new AccountService()
-		}
+		}else if(actionValue.equals("cambiarLimiteCuentaDiario")){
 		
+			int numeroCuenta = Integer.parseInt(req.getParameter("numeroCuenta"));
+			Double limiteDiario = Double.parseDouble(req.getParameter("limiteDiario"));
+			
+			new AccountService().cambiarLimiteDiario(numeroCuenta, limiteDiario);
+			
+		}else if(actionValue.equals("cambiarLimiteMonedero")){
+			
+			String nombreUsuario = req.getParameter("nombreUsuario");
+			Double limiteSuperior = Double.parseDouble(req.getParameter("limiteSuperior"));
+			
+			new CardService().cambiarLimiteMonederoSuperior(nombreUsuario, limiteSuperior);
+			
+		}else if(actionValue.equals("cambiarLimiteDebitoSuperior")){
+			
+			int numeroTarjeta = Integer.parseInt(req.getParameter("numeroCuenta"));
+			Double limiteSuperior = Double.parseDouble(req.getParameter("limiteSuperior"));
+			
+			new CardService().cambiarLimiteDebitoSuperior(numeroTarjeta, limiteSuperior);
+			
+		}else if(actionValue.equals("cambiarLimiteDebitoDiario")){
+			
+			int numeroTarjeta = Integer.parseInt(req.getParameter("numeroCuenta"));
+			Double limiteDiario = Double.parseDouble(req.getParameter("limiteDiario"));
+			
+			new CardService().cambiarLimiteDebitoDiario(numeroTarjeta, limiteDiario);
+		}
 		doGet(req, resp);
 	}
 

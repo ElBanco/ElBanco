@@ -103,4 +103,47 @@ public class AccountService extends Service{
 		return doTransaction(handler);
 	}
 
+	public boolean cambiarLimiteInferior(final int numeroCuenta, final Double limiteInferior) {
+		
+		UpdateHandler handler = new UpdateHandler() {
+			
+			@Override
+			public boolean handle(Connection conn) throws SQLException {
+				
+				CuentaDAO accountDAO = new CuentaDAO(conn);
+				Cuenta account = accountDAO.getCuenta(numeroCuenta);
+				
+				if (account != null) {
+					accountDAO.cambiarLimiteInferior(account, limiteInferior);
+				}else{
+					return false;
+				}
+				return true;
+			}
+		};
+		return doTransaction(handler);
+		
+	}
+
+	public boolean cambiarLimiteDiario(final int numeroCuenta, final Double limiteDiario){
+		
+		UpdateHandler handler = new UpdateHandler() {
+			
+			@Override
+			public boolean handle(Connection conn) throws SQLException {
+				
+				CuentaDAO accountDAO = new CuentaDAO(conn);
+				Cuenta account = accountDAO.getCuenta(numeroCuenta);
+				
+				if (account != null) {
+					accountDAO.cambiarLimiteDiario(account, limiteDiario);
+				}else{
+					return false;
+				}
+				return true;
+			}
+		};
+		return doTransaction(handler);
+	}
+
 }

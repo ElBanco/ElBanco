@@ -1,21 +1,18 @@
 package model.dao;
-//Arreglar lo de añadir tarjeta.
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-import utils.UpdateHandler;
 
 import model.beans.*;
 
 public class TarjetaDAO extends DAO{
-
+	//Arreglar lo de añadir tarjeta.
 	public TarjetaDAO(Connection conn) {
 		super(conn);
 		// TODO Auto-generated constructor stub
@@ -47,7 +44,19 @@ public class TarjetaDAO extends DAO{
 	
 	private final String GET_DEBIT_CARD = "SELECT NumeroTarjeta FROM Tarjeta WHERE NumeroCuenta=?;";
 
-	private final String DAR_BAJA_TARJETA = "UPDATE Tarjeta SET FechaBaja=? WHERE NumeroTarjeta=?";
+	private final String DAR_BAJA_TARJETA = "UPDATE Tarjeta SET FechaBaja=? WHERE NumeroTarjeta=?;";
+	
+	private final String CAMBIAR_LIMITE_MONEDERO = "UPDATE Tarjeta " +
+			"SET LimiteSuperior=? " +
+			"WHERE nombreUsuario=?, AND Discriminador=Monedero;";
+	
+	private final String CAMBIAR_lIMITE_SUPERIOR_TARJETA = "UPDATE Tarjeta " +
+			"SET LimiteSuperior=? " +
+			"WHERE numeroTarjeta=?;";
+	
+	private final String CAMBIAR_lIMITE_DIARIO_TARJETA = "UPDATE Tarjeta " +
+			"SET LimiteDiario=? " +
+			"WHERE numeroTarjeta=?;";
 	
 	public boolean existeTarjeta(final int numeroTarjeta) throws SQLException{
 		
@@ -164,9 +173,10 @@ public class TarjetaDAO extends DAO{
 		if (existeTarjeta(numeroTarjeta)){
 			
 			GregorianCalendar calendar = new GregorianCalendar();
-				
+			java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
+			
 			PreparedStatement stmt = conn.prepareStatement(DAR_BAJA_TARJETA);
-			stmt.setDate(1, new java.sql.Date(calendar.getTime().getTime()));
+			stmt.setDate(1, currentDate );
 			stmt.setInt(2, numeroTarjeta);
 			
 			stmt.executeUpdate();
@@ -178,6 +188,53 @@ public class TarjetaDAO extends DAO{
 		return true;
 	}
 	
+	public boolean cambiarLimiteMonederoSuperior(String nombreUsuario,
+			Double limiteSuperior) throws SQLException {
+		
+				
+		PreparedStatement stmt = conn.prepareStatement(CAMBIAR_LIMITE_MONEDERO);
+		stmt.setDouble(1, limiteSuperior);
+		
+		stmt.executeUpdate();
+		stmt.close();
+
+		return true;
+	}
+	
+	public boolean cambiarLimiteDebitoSuperior(int numeroTarjeta,
+			Double limiteSuperior) throws SQLException {
+		
+		if(existeTarjeta(numeroTarjeta)){
+		
+			PreparedStatement stmt = conn.prepareStatement(CAMBIAR_lIMITE_SUPERIOR_TARJETA);
+			stmt.setDouble(1, limiteSuperior);
+			stmt.setInt(2, numeroTarjeta);
+			
+			stmt.executeUpdate();
+			stmt.close();
+		}else{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean cambiarLimiteDebitoDiario(int numeroTarjeta,
+			Double limiteDiario) throws SQLException {
+		
+		if(existeTarjeta(numeroTarjeta)){
+			
+			PreparedStatement stmt = conn.prepareStatement(CAMBIAR_lIMITE_DIARIO_TARJETA);
+			stmt.setDouble(1, limiteDiario);
+			stmt.setInt(2, numeroTarjeta);
+			
+			stmt.executeUpdate();
+			stmt.close();
+		}else{
+			return false;
+		}
+		return false;
+	}
 	private java.sql.Date obtenerFechaCaducidad(GregorianCalendar gregCalendar){
 		
 		java.util.Date fechaCaducidad;
@@ -186,6 +243,5 @@ public class TarjetaDAO extends DAO{
 		java.sql.Date sqlFechaCaducidad = new java.sql.Date(fechaCaducidad.getTime());
 
 		return sqlFechaCaducidad;
-	}
-	
+	}	
 }
