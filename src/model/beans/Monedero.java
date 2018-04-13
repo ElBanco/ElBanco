@@ -4,7 +4,6 @@ public class Monedero extends Tarjeta{
 	
 	public String nombreUsuario;
 	public double saldo;
-	public double limiteSuperior;
 	
 	public String getNombreUsuario() {
 		return nombreUsuario;
@@ -18,13 +17,6 @@ public class Monedero extends Tarjeta{
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
-	public double getLimiteSuperior() {
-		return limiteSuperior;
-	}
-	public void setLimiteSuperior(double limiteSuperior) {
-		this.limiteSuperior = limiteSuperior;
-	}
 	
 	
-
 }

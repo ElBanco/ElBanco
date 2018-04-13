@@ -5,7 +5,6 @@ public class Transferencia extends Operacion{
 	public int numeroCuentaOrigen;
 	public int numeroCuentaDestino;
 	
-	
 	public int getNumeroCuentaOrigen() {
 		return numeroCuentaOrigen;
 	}

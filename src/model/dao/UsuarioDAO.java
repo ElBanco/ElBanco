@@ -23,6 +23,12 @@ public class UsuarioDAO extends DAO{
 			"VALUES (?,?,?,?,?,?,?,?,NOW(),NOW());";
 	
 	
+	@Override
+	void processRow(Object bean, ResultSet result) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	public Usuario getUser(String username) throws SQLException{
 		
@@ -99,5 +105,6 @@ public class UsuarioDAO extends DAO{
 		
 		
 	}
+
 	
 }

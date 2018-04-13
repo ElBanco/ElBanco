@@ -9,7 +9,7 @@ import model.beans.*;
 import model.dao.*;
 
 public class OperationService extends Service{
-
+	
 	public boolean doTransference(final int sourceAccountNumber, final int destinationAccountNumber, final double amount){
 	
 		UpdateHandler handler = new UpdateHandler() {
@@ -61,5 +61,30 @@ public class OperationService extends Service{
 		};
 		
 		return doTransaction(handler);
+	}
+	
+	public boolean updateMonedero(final Usuario user, final double amount){
+		
+		UpdateHandler updateHandler = new UpdateHandler() {
+			
+			@Override
+			public boolean handle(Connection conn) throws SQLException {
+				
+				TarjetaDAO cardDAO = new TarjetaDAO(conn);
+				OperacionDAO opDAO = new OperacionDAO(conn);
+				
+				Monedero monedero = cardDAO.getMonedero(user);
+				cardDAO.updateMonedero(monedero, monedero.getSaldo() + amount);
+				
+				UpdateMonedero updateMonedero = new UpdateMonedero();
+				updateMonedero.setCantidad(amount);
+				updateMonedero.setUsername(monedero.getNombreUsuario());
+				opDAO.addOp(updateMonedero);
+				
+				return true;
+			}
+		};
+		
+		return doTransaction(updateHandler);
 	}
 }

@@ -1,6 +1,7 @@
 package model.dao;
 
 import java.sql.Connection;
+import java.util.GregorianCalendar;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +25,14 @@ public class TarjetaDAO extends DAO{
 	
 	private final String GET_MONEDERO = "SELECT * FROM Tarjeta WHERE NombreUsuario=?;";
 	
+	private final String UPDATE_SALDO_MONEDERO = "UPDATE Tarjeta SET Saldo=? WHERE NombreUsuario=?;";
+	
+	
+	@Override
+	void processRow(Object bean, ResultSet result) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 	public void addTarjeta(Tarjeta newCard) throws SQLException{
@@ -72,9 +81,20 @@ public class TarjetaDAO extends DAO{
 		
 		return monedero;
 		
-		
-		
 	}
 	
+	public void updateMonedero(Monedero monedero, double saldo) throws SQLException{
+		
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_SALDO_MONEDERO);
+		
+		stmt.setDouble(1, saldo);
+		stmt.setString(2, monedero.getNombreUsuario());
+		
+		monedero.setSaldo(saldo);
+		
+		stmt.executeUpdate();
+		
+	}
+
 	
 }

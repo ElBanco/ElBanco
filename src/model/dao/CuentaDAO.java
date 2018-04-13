@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import model.beans.*;
 
@@ -29,10 +30,16 @@ public class CuentaDAO extends DAO{
 	
 	private final String UPDATE_SALDO = "UPDATE Cuenta SET Saldo=?, FechaModificacion=NOW() WHERE NumeroCuenta=?;";
 	
-	private final String GET = "SELECT * FROM Cuenta WHERE NumeroCuenta=?;";
+	private final String GET = "SELECT * FROM Cuenta WHERE NumeroCuenta=?;"; 
+	
+	
+	@Override
+	void processRow(Object bean, ResultSet result) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
-	
 	public void addCuenta(Cuenta newAccount) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
@@ -107,7 +114,6 @@ public class CuentaDAO extends DAO{
 		return account;
 		
 	}
-	
-	
+
 	
 }
