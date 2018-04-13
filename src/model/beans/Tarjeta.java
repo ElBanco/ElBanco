@@ -4,17 +4,17 @@ import java.util.Date;
 
 public abstract class Tarjeta {
 	
-	public int numeroTarjeta;
+	public String numeroTarjeta;
 	public String pin;
 	public Date fechaCreacion;
 	public Date fechaBaja;
 	public Date fechaCancelacion;
 	
 	
-	public int getNumeroTarjeta() {
+	public String getNumeroTarjeta() {
 		return numeroTarjeta;
 	}
-	public void setNumeroTarjeta(int numeroTarjeta) {
+	public void setNumeroTarjeta(String numeroTarjeta) {
 		this.numeroTarjeta = numeroTarjeta;
 	}
 	public String getPin() {

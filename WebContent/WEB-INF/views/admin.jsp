@@ -21,7 +21,6 @@
 		Email : <input name="email" type="text"/> <br />
 		Telefono : <input name="telefono" type="text"/> <br />
 		Direccion : <input name="direccion" type="text"/> <br />
-		HashContrasena : <input name="hashContrasena" type="text"/> <br />
 		Cantidad inicial : <input name="cantidadDinero" type="text"/> <br />
 		<input type="submit" />
 	</form>

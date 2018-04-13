@@ -1,11 +1,13 @@
 package model.dao;
 
 import java.sql.Connection;
-import java.util.GregorianCalendar;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import utils.DatesFactory;
+import utils.RandomStringGenerator;
 import model.beans.*;
 
 public class TarjetaDAO extends DAO{
@@ -16,16 +18,23 @@ public class TarjetaDAO extends DAO{
 	}
 
 	private final String INSERT_MONEDERO = "INSERT INTO Tarjeta (" +
+			"NumeroTarjeta, " +
 			"PIN, " +
 			"NombreUsuario, " +
 			"Saldo, " +
 			"FechaCreacion, " +
 			"Discriminador) " +
-			"VALUES (?, ?, ?, NOW(), 'Monedero');";
+			"VALUES (?, ?, ?, ?, ?,'Monedero');";
+	
+	private final String GET = "SELECT * FROM Tarjeta WHERE NumeroTarjeta=?;";
 	
 	private final String GET_MONEDERO = "SELECT * FROM Tarjeta WHERE NombreUsuario=?;";
 	
 	private final String UPDATE_SALDO_MONEDERO = "UPDATE Tarjeta SET Saldo=? WHERE NombreUsuario=?;";
+	
+	private final RandomStringGenerator cardNumberGenerator = new RandomStringGenerator(16, RandomStringGenerator.StringType.NUMERIC);
+	
+	private final RandomStringGenerator pinGenerator = new RandomStringGenerator(3, RandomStringGenerator.StringType.NUMERIC);
 	
 	
 	@Override
@@ -34,28 +43,40 @@ public class TarjetaDAO extends DAO{
 		
 	}
 	
-
 	public void addTarjeta(Tarjeta newCard) throws SQLException{
-		
 		
 		PreparedStatement stmt;
 		
+		String cardNumber = "";
+		boolean validAccountNumber = false;
+		
+		while(!validAccountNumber){
+			cardNumber = cardNumberGenerator.newString();
+			validAccountNumber = checkPrimaryKey(cardNumber, GET);
+		}
+		System.out.println(cardNumber);
+		
+		String pin = pinGenerator.newString();
+		System.out.println(pin);
+		
+		DatesFactory datesFactory = new DatesFactory();
+		
+		newCard.setNumeroTarjeta(cardNumber);
+		newCard.setPin(pin);
+		newCard.setFechaCreacion(datesFactory.getUtilDate());
+		
 		if(newCard instanceof Monedero){
 			stmt = conn.prepareStatement(INSERT_MONEDERO, Statement.RETURN_GENERATED_KEYS);
-			stmt.setString(1, newCard.getPin());
-			stmt.setString(2, ((Monedero) newCard).getNombreUsuario());
-			stmt.setDouble(3, ((Monedero) newCard).getSaldo()); 
+			stmt.setString(1, cardNumber);
+			stmt.setString(2, pin);
+			stmt.setString(3, ((Monedero) newCard).getNombreUsuario());
+			stmt.setDouble(4, ((Monedero) newCard).getSaldo());
+			stmt.setDate(5, datesFactory.getSqlDate());
 		}else{
 			return;
 		}
 		
-		
-		stmt.executeUpdate();
-		ResultSet rs = stmt.getGeneratedKeys();
-		if (rs != null && rs.next()) {
-		    newCard.setNumeroTarjeta(rs.getInt(1));
-		}
-		
+		stmt.execute();
 		stmt.close();
 		
 	}
@@ -71,6 +92,7 @@ public class TarjetaDAO extends DAO{
 		
 		if(rs.next()){
 			monedero = new Monedero();
+			monedero.setNumeroTarjeta(rs.getString("NumeroTarjeta"));
 		    monedero.setNombreUsuario(rs.getString("NombreUsuario"));
 		    monedero.setPin(rs.getString("PIN"));
 		    monedero.setSaldo(rs.getDouble("Saldo"));

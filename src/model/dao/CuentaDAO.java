@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import utils.DatesFactory;
+import utils.RandomStringGenerator;
+
 import model.beans.*;
 
 public class CuentaDAO extends DAO{
@@ -20,17 +23,20 @@ public class CuentaDAO extends DAO{
 
 
 	private final String INSERT = "INSERT INTO Cuenta (" +
+											"NumeroCuenta, " +
 											"NombreUsuario, " +
 											"Saldo, " + 
 											"FechaCreacion, " +
 											"FechaModificacion) " +
-											"VALUES (?, ?, NOW(), NOW());";
+											"VALUES (?, ?, ?, ?, ?);";
 	
 	private final String LIST_BY_USER = "SELECT * FROM Cuenta WHERE NombreUsuario=?;";
 	
 	private final String UPDATE_SALDO = "UPDATE Cuenta SET Saldo=?, FechaModificacion=NOW() WHERE NumeroCuenta=?;";
 	
 	private final String GET = "SELECT * FROM Cuenta WHERE NumeroCuenta=?;"; 
+	
+	private final RandomStringGenerator stringGenerator = new RandomStringGenerator(9, RandomStringGenerator.StringType.NUMERIC);
 	
 	
 	@Override
@@ -43,16 +49,27 @@ public class CuentaDAO extends DAO{
 	public void addCuenta(Cuenta newAccount) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+		DatesFactory datesFactory = new DatesFactory();
+		String accountNumber = "";
+		boolean validAccountNumber = false;
 		
-		stmt.setString(1, newAccount.getNombreUsuario());
-		stmt.setString(2, String.valueOf(newAccount.getSaldo())); 
-		
-		stmt.executeUpdate();
-		ResultSet rs = stmt.getGeneratedKeys();
-		if (rs != null && rs.next()) {
-		    newAccount.setNumeroCuenta(rs.getInt(1));
+		while(!validAccountNumber){
+			accountNumber = stringGenerator.newString();
+			validAccountNumber = checkPrimaryKey(accountNumber, GET);
 		}
 		
+		newAccount.setNumeroCuenta(accountNumber);
+		System.out.println(accountNumber);
+		newAccount.setFechaCreacion(datesFactory.getUtilDate());
+		newAccount.setFechaModificacion(datesFactory.getUtilDate());
+		
+		stmt.setString(1, accountNumber);
+		stmt.setString(2, newAccount.getNombreUsuario());
+		stmt.setString(3, String.valueOf(newAccount.getSaldo()));
+		stmt.setDate(4, datesFactory.getSqlDate());
+		stmt.setDate(5, datesFactory.getSqlDate());
+		
+		stmt.execute();
 		stmt.close();
 		
 	}
@@ -68,7 +85,7 @@ public class CuentaDAO extends DAO{
 		Cuenta account;
 		while(rs.next()){
 			account = new Cuenta();
-			account.setNumeroCuenta(rs.getInt("NumeroCuenta"));
+			account.setNumeroCuenta(rs.getString("NumeroCuenta"));
 			account.setNombreUsuario(rs.getString("NombreUsuario"));
 			account.setSaldo(rs.getDouble("Saldo"));
 			account.setFechaCreacion(rs.getDate("FechaCreacion"));
@@ -87,23 +104,23 @@ public class CuentaDAO extends DAO{
 		
 		PreparedStatement stmt = conn.prepareStatement(UPDATE_SALDO);
 		stmt.setDouble(1, balance);
-		stmt.setInt(2, account.getNumeroCuenta());
+		stmt.setString(2, account.getNumeroCuenta());
 		stmt.executeUpdate();
 		stmt.close();
 		
 	}
 	
 	
-	public Cuenta getCuenta(int id) throws SQLException{
+	public Cuenta getCuenta(String id) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(GET);
-		stmt.setInt(1, id);
+		stmt.setString(1, id);
 		ResultSet rs = stmt.executeQuery();
 		Cuenta account = null;
 		
 		if(rs.next()){
 			account = new Cuenta();
-			account.setNumeroCuenta(rs.getInt("NumeroCuenta"));
+			account.setNumeroCuenta(rs.getString("NumeroCuenta"));
 			account.setNombreUsuario(rs.getString("NombreUsuario"));
 			account.setSaldo(rs.getDouble("Saldo"));
 			account.setFechaCreacion(rs.getDate("FechaCreacion"));
@@ -114,6 +131,7 @@ public class CuentaDAO extends DAO{
 		return account;
 		
 	}
+	
 
 	
 }

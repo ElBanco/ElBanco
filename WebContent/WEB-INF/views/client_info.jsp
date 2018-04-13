@@ -37,7 +37,6 @@
       <p>saldo: ${monedero.saldo}</p>
       <p>fechaCancelacion: ${monedero.fechaCancelacion}</p>
       <p>nombreUsuario: ${monedero.nombreUsuario}</p>
-      <p>limiteSuperior: ${monedero.limiteSuperior}</p>
       <p>fechaCreacion: ${monedero.fechaCreacion}</p>
       <p>fechaBaja: ${mondero.fechaBaja}</p>
 	  <br />

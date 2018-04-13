@@ -7,7 +7,7 @@ public class RandomStringGenerator {
 	private int length;
 	private static final String numbers = "1234567890";
 	private static final String lettersUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private String salchars;
+	private String saltchars;
 	
 	public enum StringType{
 		
@@ -30,7 +30,7 @@ public class RandomStringGenerator {
 	public RandomStringGenerator(int length, StringType stringType) {
 		super();
 		this.length = length;
-		this.salchars = stringType.getSaltChars();
+		this.saltchars = stringType.getSaltChars();
 	}
 	
 	public String newString(){
@@ -38,9 +38,9 @@ public class RandomStringGenerator {
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
         
-        while (salt.length() < this.length) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * salchars.length());
-            salt.append(salchars.charAt(index));
+        while (salt.length() < this.length) { 
+            int index = (int) (rnd.nextFloat() * saltchars.length());
+            salt.append(saltchars.charAt(index));
         }
         
         return salt.toString();

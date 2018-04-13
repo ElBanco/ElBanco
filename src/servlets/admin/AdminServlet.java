@@ -24,7 +24,6 @@ public class AdminServlet extends HttpServlet{
 		String email = req.getParameter("email");
 		String telefono = req.getParameter("telefono");
 		String direccion = req.getParameter("direccion");
-		String hashContrasena = req.getParameter("hashContrasena");
 		
 		Usuario user = null;
 		
@@ -33,8 +32,7 @@ public class AdminServlet extends HttpServlet{
 		   apellidos != null && 
 		   email != null && 
 		   telefono != null && 
-		   direccion != null && 
-		   hashContrasena != null)
+		   direccion != null) 
 		{
 			user = new Usuario();
 			user.setNombreUsuario(nombreUsuario);
@@ -43,7 +41,6 @@ public class AdminServlet extends HttpServlet{
 			user.setEmail(email);
 			user.setTelefono(telefono);
 			user.setDireccion(direccion);
-			user.setHashContrasena(hashContrasena);
 			user.setRolID("Cliente");
 			user.setFechaCreacion(new Date());
 			user.setFechaModificacion(new Date());

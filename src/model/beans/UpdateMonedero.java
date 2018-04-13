@@ -2,14 +2,15 @@ package model.beans;
 
 public class UpdateMonedero extends Operacion{
 	
-	public String username;
+	public String numeroTarjeta;
 
-	public String getUsername() {
-		return username;
+	public String getNumeroTarjeta() {
+		return numeroTarjeta;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setNumeroTarjeta(String numeroTarjeta) {
+		this.numeroTarjeta = numeroTarjeta;
 	}
+
 	
 }

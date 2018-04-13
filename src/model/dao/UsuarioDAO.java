@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+
+import utils.DatesFactory;
+import utils.RandomStringGenerator;
 import model.beans.*;
 
 public class UsuarioDAO extends DAO{
@@ -20,7 +23,9 @@ public class UsuarioDAO extends DAO{
 	
 	private final String INSERT = "INSERT INTO Usuario (" +
 			"NombreUsuario, RolID, Nombre, Apellidos, Email, Telefono, Direccion, HashContrasena, FechaCreacion, FechaModificacion) " +
-			"VALUES (?,?,?,?,?,?,?,?,NOW(),NOW());";
+			"VALUES (?,?,?,?,?,?,?,?,?,?);";
+	
+	private final RandomStringGenerator passGenerator = new RandomStringGenerator(10, RandomStringGenerator.StringType.ALPHANUMERIC);
 	
 	
 	@Override
@@ -90,6 +95,12 @@ public class UsuarioDAO extends DAO{
 	public void addUser(Usuario newUser) throws SQLException {
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT);
+		DatesFactory datesFactory = new DatesFactory();
+		String pass = passGenerator.newString();
+		newUser.setHashContrasena(pass);
+		System.out.println(pass);
+		newUser.setFechaCreacion(datesFactory.getUtilDate());
+		newUser.setFechaModificacion(datesFactory.getUtilDate());
 		
 		stmt.setString(1, newUser.getNombreUsuario());
 		stmt.setString(2, newUser.getRolID());
@@ -99,6 +110,8 @@ public class UsuarioDAO extends DAO{
 		stmt.setString(6, newUser.getTelefono());
 		stmt.setString(7, newUser.getDireccion());
 		stmt.setString(8, newUser.getHashContrasena());
+		stmt.setDate(9, datesFactory.getSqlDate());
+		stmt.setDate(10, datesFactory.getSqlDate());
 		
 		stmt.executeUpdate();
 		stmt.close();

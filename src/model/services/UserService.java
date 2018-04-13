@@ -63,7 +63,6 @@ public class UserService extends Service{
 				
 				Monedero monedero = new Monedero();
 				monedero.setNombreUsuario(newUser.getNombreUsuario());
-				monedero.setPin("6666"); // cambiar a número aleatorio
 				monedero.setSaldo(0);
 				cardDAO.addTarjeta(monedero);
 				
@@ -74,5 +73,7 @@ public class UserService extends Service{
 		return doTransaction(handler);
 
 	}
+	
+	
 
 }

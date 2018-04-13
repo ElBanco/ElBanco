@@ -10,7 +10,7 @@ import model.dao.*;
 
 public class OperationService extends Service{
 	
-	public boolean doTransference(final int sourceAccountNumber, final int destinationAccountNumber, final double amount){
+	public boolean doTransference(final String sourceAccountNumber, final String destinationAccountNumber, final double amount){
 	
 		UpdateHandler handler = new UpdateHandler() {
 			
@@ -78,7 +78,7 @@ public class OperationService extends Service{
 				
 				UpdateMonedero updateMonedero = new UpdateMonedero();
 				updateMonedero.setCantidad(amount);
-				updateMonedero.setUsername(monedero.getNombreUsuario());
+				updateMonedero.setNumeroTarjeta(monedero.getNumeroTarjeta());
 				opDAO.addOp(updateMonedero);
 				
 				return true;

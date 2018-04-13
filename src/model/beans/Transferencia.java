@@ -2,21 +2,22 @@ package model.beans;
 
 public class Transferencia extends Operacion{
 
-	public int numeroCuentaOrigen;
-	public int numeroCuentaDestino;
+	public String numeroCuentaOrigen;
+	public String numeroCuentaDestino;
 	
-	public int getNumeroCuentaOrigen() {
+	public String getNumeroCuentaOrigen() {
 		return numeroCuentaOrigen;
 	}
-	public void setNumeroCuentaOrigen(int numeroCuentaOrigen) {
+	public void setNumeroCuentaOrigen(String numeroCuentaOrigen) {
 		this.numeroCuentaOrigen = numeroCuentaOrigen;
 	}
-	public int getNumeroCuentaDestino() {
+	public String getNumeroCuentaDestino() {
 		return numeroCuentaDestino;
 	}
-	public void setNumeroCuentaDestino(int numeroCuentaDestino) {
+	public void setNumeroCuentaDestino(String numeroCuentaDestino) {
 		this.numeroCuentaDestino = numeroCuentaDestino;
 	}
-
+	
+	
 	
 }

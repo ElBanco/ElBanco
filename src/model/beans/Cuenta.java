@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Cuenta {
 	
-	public int numeroCuenta;
+	public String numeroCuenta;
 	public String nombreUsuario;
 	public Double saldo;
 	public Double limiteDiario;
@@ -18,11 +18,11 @@ public class Cuenta {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getNumeroCuenta() {
+	public String getNumeroCuenta() {
 		return numeroCuenta;
 	}
 
-	public void setNumeroCuenta(int numeroCuenta) {
+	public void setNumeroCuenta(String numeroCuenta) {
 		this.numeroCuenta = numeroCuenta;
 	}
 

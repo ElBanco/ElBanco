@@ -33,15 +33,15 @@ public class ClientServlet extends HttpServlet{
 		// TODO Auto-generated method stub
 		
 		Double cantidad;
-		int numeroCuentaDestino;
+		String numeroCuentaDestino;
 		
 		Usuario user = (Usuario) req.getSession().getAttribute("user");
 		List<Cuenta> cuentas = new AccountService().getAccounts(user);
-		int numeroCuentaOrigen = cuentas.get(0).getNumeroCuenta();
+		String numeroCuentaOrigen = cuentas.get(0).getNumeroCuenta();
 		
 		if(req.getParameter("numeroCuentaDestino") != null && req.getParameter("cantidad") != null){
 			cantidad = Double.valueOf(req.getParameter("cantidad"));
-			numeroCuentaDestino = Integer.valueOf(req.getParameter("numeroCuentaDestino"));
+			numeroCuentaDestino = req.getParameter("numeroCuentaDestino");
 			new OperationService().doTransference(numeroCuentaOrigen, numeroCuentaDestino, cantidad);
 		}
 		

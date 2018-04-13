@@ -25,14 +25,14 @@ public class OperacionDAO extends DAO{
 			"NumeroCuentaDestino, " +
 			"Fecha, " +
 			"Discriminador) " +
-			"VALUES (?, ?, ?, ?, Transfer);";
+			"VALUES (?, ?, ?, ?, 'Transfer');";
 	
 	private final String INSERT_UPDATE_MONEDERO = "INSERT INTO Operacion (" +
 			"Cantidad, " + 
-			"NombreUsuario, " +
+			"NumeroTarjeta, " +
 			"Fecha, " +
 			"Discriminador) " +
-			"VALUES (?, ?, ?, UpdateMonedero);";
+			"VALUES (?, ?, ?, 'UpdateMonedero');";
 	
 	private final String DAILY_TRANSFERENCES_SUM = "SELECT SUM(Cantidad) FROM Operacion WHERE NumeroCuentaOrigen=? AND DATE(Fecha)=CURDATE();";
 	
@@ -49,8 +49,8 @@ public class OperacionDAO extends DAO{
 			Transferencia t = (Transferencia) bean;
 			t.setCantidad(result.getDouble("Cantidad"));
 			t.setFecha(result.getDate("Fecha"));
-			t.setNumeroCuentaDestino(result.getInt("NumeroCuentaDestino"));
-			t.setNumeroCuentaOrigen(result.getInt("NumeroCuentaOrigen"));
+			t.setNumeroCuentaDestino(result.getString("NumeroCuentaDestino"));
+			t.setNumeroCuentaOrigen(result.getString("NumeroCuentaOrigen"));
 			t.setOperacionID(result.getInt("OperacionID"));
 			
 		}else if(bean instanceof UpdateMonedero){
@@ -58,7 +58,7 @@ public class OperacionDAO extends DAO{
 			UpdateMonedero u = (UpdateMonedero) bean;
 			u.setCantidad(result.getDouble("Cantidad"));
 			u.setFecha(result.getDate("Fecha"));
-			u.setUsername(result.getString("NombreUsuario"));
+			u.setNumeroTarjeta(result.getString("numeroTarjeta"));
 			
 		}
 		
@@ -75,13 +75,13 @@ public class OperacionDAO extends DAO{
 		if (op instanceof Transferencia){
 			stmt = conn.prepareStatement(INSERT_TRANSFERENCIA, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDouble(1, op.getCantidad());
-			stmt.setInt(2, ((Transferencia) op).getNumeroCuentaOrigen());
-			stmt.setInt(3, ((Transferencia) op).getNumeroCuentaDestino());
+			stmt.setString(2, ((Transferencia) op).getNumeroCuentaOrigen());
+			stmt.setString(3, ((Transferencia) op).getNumeroCuentaDestino());
 			stmt.setDate(4, sqlDate);
 		}else if(op instanceof UpdateMonedero){
 			stmt = conn.prepareStatement(INSERT_UPDATE_MONEDERO, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDouble(1, op.getCantidad());
-			stmt.setString(2, ((UpdateMonedero) op).getUsername());
+			stmt.setString(2, ((UpdateMonedero) op).getNumeroTarjeta());
 			stmt.setDate(3, sqlDate);
 		}else{
 			return;
@@ -100,7 +100,7 @@ public class OperacionDAO extends DAO{
 	public double getDailyTranferenceSum(Cuenta account) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(DAILY_TRANSFERENCES_SUM);
-		stmt.setInt(1, account.getNumeroCuenta());
+		stmt.setString(1, account.getNumeroCuenta());
 		ResultSet rs = stmt.executeQuery();
 		
 		if(rs.next()){
@@ -115,8 +115,8 @@ public class OperacionDAO extends DAO{
 		
 		List<Transferencia> listTransfers = new ArrayList<Transferencia>();
 		PreparedStatement stmt = conn.prepareStatement(LIST_TRANSFERENCES);
-		stmt.setInt(1, account.getNumeroCuenta());
-		stmt.setInt(2, account.getNumeroCuenta());
+		stmt.setString(1, account.getNumeroCuenta());
+		stmt.setString(2, account.getNumeroCuenta());
 		ResultSet rs = stmt.executeQuery();
 		
 		Transferencia t;
