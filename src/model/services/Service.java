@@ -16,6 +16,7 @@ public abstract class Service {
 	
 	DataSource dataSource;
 	final String JNDI_NAME = "jdbc/ElBancoDB";
+	//final String JNDI_NAME = "jdbc:mysql://yourserver:3306/yourdatabase?zeroDateTimeBehavior=convertToNull";
 	
 	Service() {
 	    try {
