@@ -21,7 +21,7 @@
 	<form action="/ElBanco/client" method="POST">
 		Cantidad : <input name="cantidad" type="text"/> <br />
 		Numero Cuenta Destino: <input name="numeroCuentaDestino" type="text"/> <br />
-		<input type="submit" value="Enviar"/>
+		<input type="submit" name = "action" value="doTransaction"/>
 	</form>
 	
 	<h2>Datos Cuenta</h2>

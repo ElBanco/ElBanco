@@ -48,15 +48,15 @@ public class TarjetaDAO extends DAO{
 	
 	private final String CAMBIAR_LIMITE_MONEDERO = "UPDATE Tarjeta " +
 			"SET LimiteSuperior=? " +
-			"WHERE nombreUsuario=?, AND Discriminador=Monedero;";
+			"WHERE NombreUsuario=? AND Discriminador='Monedero;";
 	
 	private final String CAMBIAR_lIMITE_SUPERIOR_TARJETA = "UPDATE Tarjeta " +
 			"SET LimiteSuperior=? " +
-			"WHERE numeroTarjeta=?;";
+			"WHERE NumeroTarjeta=?;";
 	
 	private final String CAMBIAR_lIMITE_DIARIO_TARJETA = "UPDATE Tarjeta " +
 			"SET LimiteDiario=? " +
-			"WHERE numeroTarjeta=?;";
+			"WHERE NumeroTarjeta=?;";
 	
 	public boolean existeTarjeta(final int numeroTarjeta) throws SQLException{
 		
@@ -194,12 +194,14 @@ public class TarjetaDAO extends DAO{
 				
 		PreparedStatement stmt = conn.prepareStatement(CAMBIAR_LIMITE_MONEDERO);
 		stmt.setDouble(1, limiteSuperior);
+		stmt.setString(2, nombreUsuario);
 		
 		stmt.executeUpdate();
 		stmt.close();
 
 		return true;
 	}
+	
 	
 	public boolean cambiarLimiteDebitoSuperior(int numeroTarjeta,
 			Double limiteSuperior) throws SQLException {
@@ -233,7 +235,7 @@ public class TarjetaDAO extends DAO{
 		}else{
 			return false;
 		}
-		return false;
+		return true;
 	}
 	private java.sql.Date obtenerFechaCaducidad(GregorianCalendar gregCalendar){
 		

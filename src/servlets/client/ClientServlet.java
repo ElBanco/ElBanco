@@ -36,19 +36,21 @@ public class ClientServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		
-		Double cantidad;
-		int numeroCuentaDestino;
 		String actionValue = req.getParameter("action");
-		
-		Usuario user = (Usuario) req.getSession().getAttribute("user");
-		List<Cuenta> cuentas = new AccountService().getAccounts(user);
-		int numeroCuentaOrigen = cuentas.get(0).getNumeroCuenta();
-		
-		if(req.getParameter("numeroCuentaDestino") != null && req.getParameter("cantidad") != null){
+
+		if(actionValue.equals("doTransaction")){
+
+			Double cantidad;
+			int numeroCuentaDestino;
+			int numeroCuentaOrigen;
+			
+			Usuario user = (Usuario) req.getSession().getAttribute("user");
+			List<Cuenta> cuentas = new AccountService().getAccounts(user);
+			numeroCuentaOrigen = cuentas.get(0).getNumeroCuenta();
 			cantidad = Double.valueOf(req.getParameter("cantidad"));
 			numeroCuentaDestino = Integer.valueOf(req.getParameter("numeroCuentaDestino"));
+			
 			new OperationService().doTransference(numeroCuentaOrigen, numeroCuentaDestino, cantidad);
 		}
 		else if(actionValue.equals("cambiarLimiteCuentaInferior")){
@@ -74,14 +76,14 @@ public class ClientServlet extends HttpServlet{
 			
 		}else if(actionValue.equals("cambiarLimiteDebitoSuperior")){
 			
-			int numeroTarjeta = Integer.parseInt(req.getParameter("numeroCuenta"));
+			int numeroTarjeta = Integer.parseInt(req.getParameter("numeroTarjeta"));
 			Double limiteSuperior = Double.parseDouble(req.getParameter("limiteSuperior"));
 			
 			new CardService().cambiarLimiteDebitoSuperior(numeroTarjeta, limiteSuperior);
 			
 		}else if(actionValue.equals("cambiarLimiteDebitoDiario")){
 			
-			int numeroTarjeta = Integer.parseInt(req.getParameter("numeroCuenta"));
+			int numeroTarjeta = Integer.parseInt(req.getParameter("numeroTarjeta"));
 			Double limiteDiario = Double.parseDouble(req.getParameter("limiteDiario"));
 			
 			new CardService().cambiarLimiteDebitoDiario(numeroTarjeta, limiteDiario);
