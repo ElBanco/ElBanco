@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 		String password = req.getParameter("password");
 		
 		if((username == null) || (password == null)){
-			req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
+			req.getRequestDispatcher("/login.jsp").forward(req, resp);
 			return;
 		}
 		
