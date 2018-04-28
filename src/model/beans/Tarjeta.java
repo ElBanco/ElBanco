@@ -7,6 +7,7 @@ public abstract class Tarjeta {
 	public String numeroTarjeta;
 	public String pin;
 	public Date fechaCreacion;
+	public Date fechaModificacion;
 	public Date fechaBaja;
 	public Date fechaCancelacion;
 	
@@ -40,6 +41,12 @@ public abstract class Tarjeta {
 	}
 	public void setFechaCancelacion(Date fechaCancelacion) {
 		this.fechaCancelacion = fechaCancelacion;
+	}
+	public Date getFechaModificacion() {
+		return fechaModificacion;
+	}
+	public void setFechaModificacion(Date fechaModificacion) {
+		this.fechaModificacion = fechaModificacion;
 	}
 	
 	

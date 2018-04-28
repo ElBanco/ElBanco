@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
-import utils.DatesFactory;
+import utils.DatesHelper;
 import utils.RandomStringGenerator;
 import model.beans.*;
 
@@ -17,49 +16,75 @@ public class UsuarioDAO extends DAO{
 		// TODO Auto-generated constructor stub
 	}
 
-	private final String AUTH = "SELECT * FROM Usuario WHERE NombreUsuario=? AND HashContrasena=?;";
+	private final String AUTH = "SELECT * FROM Usuario WHERE NombreUsuario=? AND HashContrasena=SHA2(?, 256);";
 	
-	private final String GET = "SELECT * FROM Usuario WHERE NombreUsuario=?;";
+	private final String GET_BY_USERNAME = "SELECT * FROM Usuario WHERE NombreUsuario=?;";
+	
+	private final String GET_BY_EMAIL = "SELECT * FROM Usuario WHERE Email=?;";
 	
 	private final String INSERT = "INSERT INTO Usuario (" +
 			"NombreUsuario, RolID, Nombre, Apellidos, Email, Telefono, Direccion, HashContrasena, FechaCreacion, FechaModificacion) " +
-			"VALUES (?,?,?,?,?,?,?,?,?,?);";
+			"VALUES (?,?,?,?,?,?,?,SHA2(?, 256),?,?);";
 	
-	private final RandomStringGenerator passGenerator = new RandomStringGenerator(10, RandomStringGenerator.StringType.ALPHANUMERIC);
 	
 	
 	@Override
-	void processRow(Object bean, ResultSet result) throws SQLException {
-		// TODO Auto-generated method stub
+	void processRow(Object bean, ResultSet rs) throws SQLException {
+		
+		Usuario user = (Usuario) bean;
+		
+		user.setNombreUsuario(rs.getString("NombreUsuario"));
+	    user.setRolID(rs.getString("RolID"));
+	    user.setNombre(rs.getString("Nombre"));
+	    user.setApellidos(rs.getString("Apellidos"));
+	    user.setDireccion(rs.getString("Direccion"));
+	    user.setEmail(rs.getString("Email"));
+	    user.setFechaCreacion(rs.getDate("FechaCreacion"));
+	    user.setFechaModificacion(rs.getDate("FechaModificacion"));
+	    user.setFechaBaja(rs.getDate("FechaBaja"));
+	    user.setTelefono(rs.getString("Telefono"));
 		
 	}
 
 	
-	public Usuario getUser(String username) throws SQLException{
+	public Usuario getUserByUsername(String username) throws SQLException{
 		
-		PreparedStatement stmt = conn.prepareStatement(GET);
+		PreparedStatement stmt = conn.prepareStatement(GET_BY_USERNAME);
 		stmt.setString(1, username);
 		ResultSet rs = stmt.executeQuery();
 		Usuario user = null;
 		
 		if(rs.next()){
 			user = new Usuario();
-		    user.setNombreUsuario(rs.getString("NombreUsuario"));
-		    user.setRolID(rs.getString("RolID"));
-		    user.setNombre(rs.getString("Nombre"));
-		    user.setApellidos(rs.getString("Apellidos"));
-		    user.setDireccion(rs.getString("Direccion"));
-		    user.setEmail(rs.getString("Email"));
-		    user.setFechaCreacion(rs.getDate("FechaCreacion"));
-		    user.setFechaModificacion(rs.getDate("FechaModificacion"));
-		    user.setFechaBaja(rs.getDate("FechaBaja"));
-		    user.setHashContrasena(rs.getString("HashContrasena"));
-		    user.setTelefono(rs.getString("Telefono"));
+		    processRow(user, rs);
 		}
+		
+		rs.close();
+	    stmt.close();
 		
 		return user;
 		
 	}
+	
+	public Usuario getUserByEmail(String email) throws SQLException{
+			
+			PreparedStatement stmt = conn.prepareStatement(GET_BY_EMAIL);
+			stmt.setString(1, email);
+			ResultSet rs = stmt.executeQuery();
+			Usuario user = null;
+			
+			if(rs.next()){
+				user = new Usuario();
+			    processRow(user, rs);
+			}
+			
+			rs.close();
+		    stmt.close();
+		    
+			return user;
+			
+		}
+	
 	
 	public Usuario authenticate(String username, String password) throws SQLException{
 	
@@ -71,17 +96,7 @@ public class UsuarioDAO extends DAO{
 		
 		if (rs.next()) {
 	       user = new Usuario();
-	       user.setNombreUsuario(rs.getString("NombreUsuario"));
-	       user.setRolID(rs.getString("RolID"));
-	       user.setNombre(rs.getString("Nombre"));
-	       user.setApellidos(rs.getString("Apellidos"));
-	       user.setDireccion(rs.getString("Direccion"));
-	       user.setEmail(rs.getString("Email"));
-	       user.setFechaCreacion(rs.getDate("FechaCreacion"));
-	       user.setFechaModificacion(rs.getDate("FechaModificacion"));
-	       user.setFechaBaja(rs.getDate("FechaBaja"));
-	       user.setHashContrasena(rs.getString("HashContrasena"));
-	       user.setTelefono(rs.getString("Telefono"));
+	       processRow(user, rs);
 	     }
 	     
 	     rs.close();
@@ -92,13 +107,10 @@ public class UsuarioDAO extends DAO{
 
 	}
 
-	public void addUser(Usuario newUser) throws SQLException {
+	public void addUser(Usuario newUser, String password) throws SQLException {
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT);
-		DatesFactory datesFactory = new DatesFactory();
-		String pass = passGenerator.newString();
-		newUser.setHashContrasena(pass);
-		System.out.println(pass);
+		DatesHelper datesFactory = new DatesHelper();
 		newUser.setFechaCreacion(datesFactory.getUtilDate());
 		newUser.setFechaModificacion(datesFactory.getUtilDate());
 		
@@ -109,7 +121,7 @@ public class UsuarioDAO extends DAO{
 		stmt.setString(5, newUser.getEmail());
 		stmt.setString(6, newUser.getTelefono());
 		stmt.setString(7, newUser.getDireccion());
-		stmt.setString(8, newUser.getHashContrasena());
+		stmt.setString(8, password);
 		stmt.setDate(9, datesFactory.getSqlDate());
 		stmt.setDate(10, datesFactory.getSqlDate());
 		

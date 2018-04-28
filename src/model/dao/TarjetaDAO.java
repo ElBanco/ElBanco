@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import utils.DatesFactory;
+import utils.DatesHelper;
 import utils.RandomStringGenerator;
 import model.beans.*;
 
@@ -23,8 +23,9 @@ public class TarjetaDAO extends DAO{
 			"NombreUsuario, " +
 			"Saldo, " +
 			"FechaCreacion, " +
+			"FechaModificacion, " +
 			"Discriminador) " +
-			"VALUES (?, ?, ?, ?, ?,'Monedero');";
+			"VALUES (?, ?, ?, ?, ?, ?,'Monedero');";
 	
 	private final String GET = "SELECT * FROM Tarjeta WHERE NumeroTarjeta=?;";
 	
@@ -48,18 +49,18 @@ public class TarjetaDAO extends DAO{
 		PreparedStatement stmt;
 		
 		String cardNumber = "";
-		boolean validAccountNumber = false;
+		boolean validCardNumber = false;
 		
-		while(!validAccountNumber){
+		while(!validCardNumber){
 			cardNumber = cardNumberGenerator.newString();
-			validAccountNumber = checkPrimaryKey(cardNumber, GET);
+			validCardNumber = checkPrimaryKey(cardNumber, GET);
 		}
 		System.out.println(cardNumber);
 		
 		String pin = pinGenerator.newString();
 		System.out.println(pin);
 		
-		DatesFactory datesFactory = new DatesFactory();
+		DatesHelper datesFactory = new DatesHelper();
 		
 		newCard.setNumeroTarjeta(cardNumber);
 		newCard.setPin(pin);
@@ -72,6 +73,7 @@ public class TarjetaDAO extends DAO{
 			stmt.setString(3, ((Monedero) newCard).getNombreUsuario());
 			stmt.setDouble(4, ((Monedero) newCard).getSaldo());
 			stmt.setDate(5, datesFactory.getSqlDate());
+			stmt.setDate(6, datesFactory.getSqlDate());
 		}else{
 			return;
 		}

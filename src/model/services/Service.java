@@ -7,9 +7,6 @@ import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import utils.MultipleResultHandler;
-import utils.SingleResultHandler;
-import utils.UpdateHandler;
 
 
 public abstract class Service {
@@ -53,17 +50,24 @@ public abstract class Service {
 		
 	}
 	
-	boolean doTransaction(UpdateHandler handler){
+	boolean doTransaction(Updater updater){
 		
 		Connection conn = null;
 		
 		try {
+			
 			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);
-			if(handler.handle(conn)){
+			
+			UpdateResult result = updater.update(conn);
+			
+			if(result.successfulUpdate()){
 				conn.commit();
 				return true;
+			}else{
+				return rollBack(conn);
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return rollBack(conn);
@@ -71,10 +75,9 @@ public abstract class Service {
 			closeConn(conn);
 		}
 		
-		return rollBack(conn);
 	}
 	
-	<T> T doSelect(SingleResultHandler<T> handler){
+	<T> T doSelect(SingleResultRetriever<T> retriever){
 		
 		Connection conn = null;
 		T result = null;
@@ -82,7 +85,7 @@ public abstract class Service {
 		try {
 			
 			conn = dataSource.getConnection();
-			result = handler.handle(conn);
+			result = retriever.retrieve(conn);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,7 +96,7 @@ public abstract class Service {
 		return result;
 	}
 	
-	<T> List<T> doSelect(MultipleResultHandler<T> handler){
+	<T> List<T> doSelect(MultipleResultRetriever<T> retriever){
 		
 		Connection conn = null;
 		List<T> results = null;
@@ -101,7 +104,7 @@ public abstract class Service {
 		try {
 			
 			conn = dataSource.getConnection();
-			results = handler.handle(conn);
+			results = retriever.retrieve(conn);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

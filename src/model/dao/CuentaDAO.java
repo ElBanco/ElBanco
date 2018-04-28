@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import utils.DatesFactory;
+import utils.DatesHelper;
 import utils.RandomStringGenerator;
 
 import model.beans.*;
@@ -49,7 +49,7 @@ public class CuentaDAO extends DAO{
 	public void addCuenta(Cuenta newAccount) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
-		DatesFactory datesFactory = new DatesFactory();
+		DatesHelper datesFactory = new DatesHelper();
 		String accountNumber = "";
 		boolean validAccountNumber = false;
 		

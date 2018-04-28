@@ -3,7 +3,6 @@ package model.services;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import utils.UpdateHandler;
 
 import model.beans.*;
 import model.dao.*;

@@ -13,7 +13,6 @@ public class Usuario {
 	public String email;
 	public String telefono;
 	public String direccion;
-	public String hashContrasena;
 	public Date fechaCreacion;
 	public Date fechaModificacion;
 	public Date fechaBaja;
@@ -92,16 +91,6 @@ public class Usuario {
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
-	}
-
-
-	public String getHashContrasena() {
-		return hashContrasena;
-	}
-
-
-	public void setHashContrasena(String hashContrasena) {
-		this.hashContrasena = hashContrasena;
 	}
 
 

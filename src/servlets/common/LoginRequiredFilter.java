@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginRequiredFilter implements Filter {
 
 	@Override
-	public void destroy() {
-
-	}
+	public void destroy() {}
 
 	@Override
 	public void doFilter(ServletRequest servletRequest,
@@ -26,8 +24,11 @@ public class LoginRequiredFilter implements Filter {
 			throws IOException, ServletException {
 		
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		
+		boolean isStaticResource = request.getRequestURI().startsWith("/resources/");
+		boolean loggedIn = request.getSession().getAttribute("user") != null;
 
-		if (request.getSession().getAttribute("user") != null) {
+		if (loggedIn || isStaticResource) {
 			chain.doFilter(servletRequest, servletResponse);
 		} else {
 			request.getRequestDispatcher("/login").forward(servletRequest, servletResponse);
@@ -35,7 +36,6 @@ public class LoginRequiredFilter implements Filter {
 	}
 
 	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-	}
+	public void init(FilterConfig arg0) throws ServletException {}
 
 }

@@ -3,13 +3,16 @@ package model.services;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import utils.SingleResultHandler;
-import utils.UpdateHandler;
+import utils.RandomStringGenerator;
+import utils.TLSEmail;
 
 import model.beans.*;
 import model.dao.*;
+import model.services.UserUpdateResult.Error;
 
 public class UserService extends Service{
+	
+	private final RandomStringGenerator passGenerator = new RandomStringGenerator(10, RandomStringGenerator.StringType.ALPHANUMERIC);
 	
 	
 	public Usuario authenticate(final String username, final String password){
@@ -35,7 +38,7 @@ public class UserService extends Service{
 			public Usuario handle(Connection conn) throws SQLException {
 				conn = dataSource.getConnection();
 				UsuarioDAO userDAO = new UsuarioDAO(conn);
-				return userDAO.getUser(username);
+				return userDAO.getUserByUsername(username);
 			}
 		};
 		
@@ -43,18 +46,26 @@ public class UserService extends Service{
 
 	}
 	
-	public boolean addNewUser(final Usuario newUser, final Double initialAmount){
+	public UpdateResult addNewUser(final Usuario newUser, final Double initialAmount){
+		
+		final String password = passGenerator.newString();
 	
-		UpdateHandler handler = new UpdateHandler() {
+		Updater updater = new Updater() {
 			
 			@Override
-			public boolean handle(Connection conn) throws SQLException {
+			public UpdateResult update(Connection conn) throws SQLException {
 				
 				UsuarioDAO userDAO = new UsuarioDAO(conn);
 				CuentaDAO accountDAO = new CuentaDAO(conn);
 				TarjetaDAO cardDAO = new TarjetaDAO(conn);
 				
-				userDAO.addUser(newUser);
+				if(userDAO.getUserByUsername(newUser.getNombreUsuario()) != null){
+					return new UserUpdateResult(false, Error.DUPLICATED_USER);
+				}else if(newUser.getEmail() != null){
+					return new UserUpdateResult(false, Error.DUPLICATED_EMAIL);
+				}
+				
+				userDAO.addUser(newUser, password);
 				
 				Cuenta originalAccount = new Cuenta();
 				originalAccount.setNombreUsuario(newUser.getNombreUsuario());
@@ -66,11 +77,16 @@ public class UserService extends Service{
 				monedero.setSaldo(0);
 				cardDAO.addTarjeta(monedero);
 				
-				return true;
+				return new UpdateResult(true);
 			}
 		};
 		
-		return doTransaction(handler);
+		if(doTransaction(handler)){
+			TLSEmail.sendEmailNewUser(newUser.email, newUser.getNombreUsuario(), password);
+			return true;
+		}else{
+			return false;
+		}
 
 	}
 	
