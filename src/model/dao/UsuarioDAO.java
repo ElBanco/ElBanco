@@ -67,23 +67,24 @@ public class UsuarioDAO extends DAO{
 	}
 	
 	public Usuario getUserByEmail(String email) throws SQLException{
-			
-			PreparedStatement stmt = conn.prepareStatement(GET_BY_EMAIL);
-			stmt.setString(1, email);
-			ResultSet rs = stmt.executeQuery();
-			Usuario user = null;
-			
-			if(rs.next()){
-				user = new Usuario();
-			    processRow(user, rs);
-			}
-			
-			rs.close();
-		    stmt.close();
-		    
-			return user;
-			
+		
+		System.out.println(email);
+		PreparedStatement stmt = conn.prepareStatement(GET_BY_EMAIL);
+		stmt.setString(1, email);
+		ResultSet rs = stmt.executeQuery();
+		Usuario user = null;
+		
+		if(rs.next()){
+			user = new Usuario();
+		    processRow(user, rs);
 		}
+		
+		rs.close();
+	    stmt.close();
+	    
+		return user;
+			
+	}
 	
 	
 	public Usuario authenticate(String username, String password) throws SQLException{
@@ -103,7 +104,6 @@ public class UsuarioDAO extends DAO{
 	     stmt.close();
 	    
 	     return user;
-
 
 	}
 

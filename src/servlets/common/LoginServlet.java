@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import service.Usuario.UserService;
+
+
 import model.beans.*;
-import model.services.UserService;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {

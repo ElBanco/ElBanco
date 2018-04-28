@@ -29,9 +29,9 @@ public class TLSEmail {
 	
 	public static void sendEmailNewUser(String toEmail, String username, String password){
 		
-		String template = "Enhorabuena has sido registado en ElBanco!!!\n\tTus credenciales son:\n" +
+		String template = "Has sido registado en ElBanco. Tus credenciales son:\n\n" +
 				"\tnombre de usuario : %s\n" +
-				"\tcontraseña        : %s\n" +
+				"\tcontraseña        : %s\n\n" +
 				"Atentamente,\n" +
 				"ElBanco";
 		String body = String.format(template, username, password);

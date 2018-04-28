@@ -1,9 +1,9 @@
 package servlets.admin;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import model.beans.*;
-import model.services.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,10 +11,62 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import service.*;
+import service.Usuario.UserService;
+import service.Usuario.UserUpdateResult;
+
+
 import model.*;
 
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet{
+	
+	private void handleAddUserResult(UserUpdateResult result, HttpServletResponse resp) throws IOException{
+		
+		PrintWriter out = resp.getWriter();
+		
+		if(result.isSuccessfulUpdate()){
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<title>Prueba</title>");
+			out.println("</head>");
+			out.println("<body>");
+			out.println("Valid User");
+			out.println("</body>");
+			out.println("</html>");
+			return;
+		}
+		
+		
+		switch (result.getError()) {
+		
+			case DUPLICATED_USER:
+				out.println("<html>");
+				out.println("<head>");
+				out.println("<title>Prueba</title>");
+				out.println("</head>");
+				out.println("<body>");
+				out.println("DUPLICATED_USER");
+				out.println("</body>");
+				out.println("</html>");
+				break;
+	
+			case DUPLICATED_EMAIL:
+				out.println("<html>");
+				out.println("<head>");
+				out.println("<title>Prueba</title>");
+				out.println("</head>");
+				out.println("<body>");
+				out.println("DUPLICATED_EMAIL");
+				out.println("</body>");
+				out.println("</html>");
+				break;
+				
+			default:
+				break;
+			
+		}
+	}
 	
 	private Usuario createUser(HttpServletRequest req){
 		
@@ -63,9 +115,10 @@ public class AdminServlet extends HttpServlet{
 		// TODO Auto-generated method stub
 		Usuario newUser = createUser(req);
 		if(newUser != null && req.getParameter("cantidadDinero") != null){
-			new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
+			UserUpdateResult result = new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
+			handleAddUserResult(result, resp);
 		}
-		req.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(req, resp);
+		//req.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(req, resp);
 	}
 
 	

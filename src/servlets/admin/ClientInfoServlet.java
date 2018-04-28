@@ -2,9 +2,6 @@ package servlets.admin;
 
 import java.io.IOException;
 import model.beans.*;
-import model.services.AccountService;
-import model.services.CardService;
-import model.services.UserService;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,6 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import service.Cuenta.AccountService;
+import service.Tarjeta.CardService;
+import service.Usuario.UserService;
+
 
 
 @WebServlet("/admin/client_info")
