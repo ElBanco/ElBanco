@@ -3,11 +3,14 @@ package service.Usuario;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.mail.MessagingException;
+
 import utils.RandomStringGenerator;
 import utils.TLSEmail;
 
 import model.beans.*;
 import model.dao.*;
+import model.dao.UsuarioDAO.AddUserCode;
 import service.*;
 import service.Usuario.UserUpdateResult.UserError;
 
@@ -59,17 +62,21 @@ public class UserService extends Service{
 				CuentaDAO accountDAO = new CuentaDAO(conn);
 				TarjetaDAO cardDAO = new TarjetaDAO(conn);
 				
-				if(userDAO.getUserByUsername(newUser.getNombreUsuario()) != null){
-					result.setSuccessfulUpdate(false);
-					((UserUpdateResult)result).setError(UserError.DUPLICATED_USER);
-					return;
-				}else if(userDAO.getUserByEmail(newUser.getEmail()) != null){
-					result.setSuccessfulUpdate(false);
-					((UserUpdateResult)result).setError(UserError.DUPLICATED_EMAIL);
-					return;
-				}
 				
-				userDAO.addUser(newUser, password);
+				AddUserCode code = userDAO.addUser(newUser, password);
+				switch (code) {
+					case DUPLICATE_USER:
+						result.setSuccessfulUpdate(false);
+						((UserUpdateResult)result).setError(UserError.DUPLICATED_USER);
+						break;
+					case DUPLICATE_EMAIL:
+						result.setSuccessfulUpdate(false);
+						((UserUpdateResult)result).setError(UserError.DUPLICATED_EMAIL);
+						break;
+	
+					default:
+						break;
+				};
 				
 				Cuenta originalAccount = new Cuenta();
 				originalAccount.setNombreUsuario(newUser.getNombreUsuario());
@@ -81,23 +88,49 @@ public class UserService extends Service{
 				monedero.setSaldo(0);
 				cardDAO.addTarjeta(monedero);
 				
+				try {
+					TLSEmail.sendEmailNewUser(newUser.email, newUser.getNombreUsuario(), password);
+				} catch (MessagingException e) {
+					result.setSuccessfulUpdate(false);
+					((UserUpdateResult)result).setError(UserError.INVALID_EMAIL);
+					return;
+				}
+				
 				result.setSuccessfulUpdate(true);
 				
-				return;
 			}
 		};
 		
 		UserUpdateResult result = new UserUpdateResult();
 		doTransaction(updater, result);
 		
-		if(result.isSuccessfulUpdate()){
-			TLSEmail.sendEmailNewUser(newUser.email, newUser.getNombreUsuario(), password);
-		}
-		
 		return result;
 
 	}
 	
+		public UserUpdateResult darBajaUser(final String nombreUsuario) {
+				// TODO Auto-generated method stub
+			Updater updater = new Updater() {
+				
+				@Override
+				public void update(Connection conn, UpdateResult result) throws SQLException {
+					// TODO Auto-generated method stub
+					UsuarioDAO userDAO = new UsuarioDAO(conn);
 	
-
+					if (userDAO.darBaja(nombreUsuario)) {
+						result.setSuccessfulUpdate(true);
+					}else{
+						result.setSuccessfulUpdate(false);
+					}
+					
+				}
+			};
+			
+			UserUpdateResult result = new UserUpdateResult();
+			doTransaction(updater, result);
+			
+			return result;
+		}
+	
+		
 }

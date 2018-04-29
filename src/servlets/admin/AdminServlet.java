@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import service.*;
+import service.Cuenta.AccountService;
+import service.Tarjeta.CardService;
 import service.Usuario.UserService;
 import service.Usuario.UserUpdateResult;
 
@@ -20,6 +22,47 @@ import model.*;
 
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet{
+	
+	
+		private Cuenta createAccount(HttpServletRequest req){
+				
+				String nombreUsuario= req.getParameter("nombreUsuario");
+				Double saldo = Double.parseDouble(req.getParameter("saldo"));
+				
+				Cuenta account = null;
+				
+				if(nombreUsuario != null &&  
+					saldo != null )
+				{
+		
+					account = new Cuenta();
+					account.setNombreUsuario(nombreUsuario);
+					account.setSaldo(saldo);
+					
+				}
+				
+				return account;		
+			}
+			
+			
+			private TarjetaDebito createDebitCard(HttpServletRequest req){
+				
+				String titular = req.getParameter("titular");
+				String numeroCuenta = req.getParameter("numeroCuenta");
+				TarjetaDebito debitCard = null;
+				
+				if(titular != null &&
+					numeroCuenta != null)
+				{
+					
+					debitCard = new TarjetaDebito();
+					debitCard.setTitular(titular);
+					debitCard.setNumeroCuenta(numeroCuenta);
+					
+				}
+				
+				return debitCard;
+			}
 	
 	private void handleAddUserResult(UserUpdateResult result, HttpServletResponse resp) throws IOException{
 		
@@ -113,12 +156,58 @@ public class AdminServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Usuario newUser = createUser(req);
-		if(newUser != null && req.getParameter("cantidadDinero") != null){
-			UserUpdateResult result = new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
-			handleAddUserResult(result, resp);
-		}
+		//Usuario newUser = createUser(req);
+		//if(newUser != null && req.getParameter("cantidadDinero") != null){
+			//UserUpdateResult result = new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
+			//handleAddUserResult(result, resp);
+		//}
 		//req.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(req, resp);
+		
+				String actionValue = req.getParameter("action");
+				if (actionValue.equals("addUser")){
+					
+					Usuario newUser = createUser(req);
+					if(newUser != null && req.getParameter("cantidadDinero") != null){
+						new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
+					}
+				}
+				//Este lo hice pero no vale para mucho
+				else if(actionValue.equals("bindAccount")){
+					
+					
+				}
+				else if(actionValue.equals("addNewAccount")){
+					
+					Cuenta newAccount = createAccount(req);
+					new AccountService().addNewAccount(newAccount);
+					
+				}
+				else if(actionValue.equals("addMonedero")){
+					
+					
+				}
+				else if(actionValue.equals("addDebitCard")){
+					
+					TarjetaDebito debitCard = createDebitCard(req);
+					new CardService().addNewDebitCard(debitCard);
+					
+				}
+				else if(actionValue.equals("darBajaUser")){
+					
+					new UserService().darBajaUser(req.getParameter("nombreUsuario"));
+		
+				}
+				else if(actionValue.equals("darBajaCuenta")){
+					
+					new AccountService().darBajaCuenta(req.getParameter("numeroCuenta"));
+				
+		 		}	 		
+				else if(actionValue.equals("darBajaTarjeta")){
+					
+					new CardService().darBajaTarjeta(req.getParameter("numeroTarjeta"));
+					
+				}
+				
 	}
 
 	

@@ -97,10 +97,10 @@ public class OperacionDAO extends DAO{
 		
 	}
 	
-	public double getDailyTranferenceSum(Cuenta account) throws SQLException{
+	public double getDailyTranferenceSum(String numeroCuenta) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(DAILY_TRANSFERENCES_SUM);
-		stmt.setString(1, account.getNumeroCuenta());
+		stmt.setString(1, numeroCuenta);
 		ResultSet rs = stmt.executeQuery();
 		
 		if(rs.next()){
@@ -110,13 +110,12 @@ public class OperacionDAO extends DAO{
 		return 0;
 	}
 	
-	public List<Transferencia> listTransferences(Cuenta account) throws SQLException{
-		
+	public List<Transferencia> listTransferences(String numeroCuenta) throws SQLException{
 		
 		List<Transferencia> listTransfers = new ArrayList<Transferencia>();
 		PreparedStatement stmt = conn.prepareStatement(LIST_TRANSFERENCES);
-		stmt.setString(1, account.getNumeroCuenta());
-		stmt.setString(2, account.getNumeroCuenta());
+		stmt.setString(1, numeroCuenta);
+		stmt.setString(2, numeroCuenta);
 		ResultSet rs = stmt.executeQuery();
 		
 		Transferencia t;
@@ -130,11 +129,11 @@ public class OperacionDAO extends DAO{
 		
 	}
 	
-	public List<UpdateMonedero> listUpdatesMonedero(Usuario user) throws SQLException{
+	public List<UpdateMonedero> listUpdatesMonedero(String nombreUsuario) throws SQLException{
 		
 		List<UpdateMonedero> listUpdates = new ArrayList<UpdateMonedero>();
 		PreparedStatement stmt = conn.prepareStatement(LIST_UPDATES_MONEDERO);
-		stmt.setString(1, user.getNombreUsuario());
+		stmt.setString(1, nombreUsuario);
 		ResultSet rs = stmt.executeQuery();
 		
 		UpdateMonedero u;

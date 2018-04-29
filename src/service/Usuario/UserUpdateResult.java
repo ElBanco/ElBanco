@@ -8,7 +8,8 @@ public class UserUpdateResult extends UpdateResult {
 
 	public enum UserError{
 		DUPLICATED_USER,
-		DUPLICATED_EMAIL;
+		DUPLICATED_EMAIL,
+		INVALID_EMAIL;
 		
 	}
 

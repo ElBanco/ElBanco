@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import service.Cuenta.AccountService;
 import service.Operacion.OperationService;
 import service.Operacion.OperationUpdateResult;
+import service.Tarjeta.CardService;
 import service.Usuario.UserUpdateResult;
 
 
@@ -96,7 +97,7 @@ public class ClientServlet extends HttpServlet{
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		Usuario user = (Usuario) req.getSession().getAttribute("user");
-		List<Cuenta> cuentas = new AccountService().getAccounts(user);
+		List<Cuenta> cuentas = new AccountService().getAccounts(user.getNombreUsuario());
 		req.setAttribute("userBean", user);
 		req.setAttribute("cuentas", cuentas);
 		req.getRequestDispatcher("/WEB-INF/views/client.jsp").forward(req, resp);
@@ -111,17 +112,58 @@ public class ClientServlet extends HttpServlet{
 		String numeroCuentaDestino;
 		
 		Usuario user = (Usuario) req.getSession().getAttribute("user");
-		List<Cuenta> cuentas = new AccountService().getAccounts(user);
+		List<Cuenta> cuentas = new AccountService().getAccounts(user.getNombreUsuario());
 		String numeroCuentaOrigen = cuentas.get(0).getNumeroCuenta();
 		
-		if(req.getParameter("numeroCuentaDestino") != null && req.getParameter("cantidad") != null){
-			cantidad = Double.valueOf(req.getParameter("cantidad"));
-			numeroCuentaDestino = req.getParameter("numeroCuentaDestino");
-			OperationUpdateResult result = new OperationService().doTransference(numeroCuentaOrigen, numeroCuentaDestino, cantidad);
-			handleTransference(result, resp);
-		}
+		//if(req.getParameter("numeroCuentaDestino") != null && req.getParameter("cantidad") != null){
+			//cantidad = Double.valueOf(req.getParameter("cantidad"));
+			//numeroCuentaDestino = req.getParameter("numeroCuentaDestino");
+			//OperationUpdateResult result = new OperationService().doTransference(numeroCuentaOrigen, numeroCuentaDestino, cantidad);
+			//handleTransference(result, resp);
+		//}
 		
-		//doGet(req, resp);
+		String actionValue = req.getParameter("action");
+		
+		if(actionValue.equals("cambiarLimiteCuentaInferior")){
+						
+			System.out.println("cambiarLimiteCuentaInferior");
+			String numeroCuenta = req.getParameter("numeroCuenta");
+			Double limiteInferior = Double.parseDouble(req.getParameter("limiteInferior"));
+			
+			new AccountService().cambiarLimiteInferior(numeroCuenta, limiteInferior);
+			
+		}else if(actionValue.equals("cambiarLimiteCuentaDiario")){
+ 			 		
+			String numeroCuenta = req.getParameter("numeroCuenta");
+			Double limiteDiario = Double.parseDouble(req.getParameter("limiteDiario"));
+			
+			new AccountService().cambiarLimiteDiario(numeroCuenta, limiteDiario);
+			
+		}else if(actionValue.equals("cambiarLimiteMonedero")){
+			
+			String nombreUsuario = req.getParameter("nombreUsuario");
+			Double limiteSuperior = Double.parseDouble(req.getParameter("limiteSuperior"));
+			
+			new CardService().cambiarLimiteMonederoSuperior(nombreUsuario, limiteSuperior);
+			
+		}else if(actionValue.equals("cambiarLimiteDebitoSuperior")){
+			
+			String numeroTarjeta = req.getParameter("numeroTarjeta");
+			Double limiteSuperior = Double.parseDouble(req.getParameter("limiteSuperior"));
+			
+			new CardService().cambiarLimiteDebitoSuperior(numeroTarjeta, limiteSuperior);
+			
+		}else if(actionValue.equals("cambiarLimiteDebitoDiario")){
+			
+			String numeroTarjeta = req.getParameter("numeroTarjeta");
+			Double limiteDiario = Double.parseDouble(req.getParameter("limiteDiario"));
+			
+			new CardService().cambiarLimiteDebitoDiario(numeroTarjeta, limiteDiario);
+		}
+
+		
+		
+		doGet(req, resp);
 	}
 
 	

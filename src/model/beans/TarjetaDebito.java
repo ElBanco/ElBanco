@@ -5,7 +5,8 @@ import java.util.Date;
 public class TarjetaDebito extends Tarjeta{
 	
 	public Date fechaCaducidad;
-	public double limiteDiario;
+	public Double limiteDiario;
+	public Double limiteSuperior;
 	public String numeroCuenta;
 	public String titular;
 	
@@ -33,6 +34,15 @@ public class TarjetaDebito extends Tarjeta{
 	}
 	public void setTitular(String titular) {
 		this.titular = titular;
+	}
+	public Double getLimiteSuperior() {
+		return limiteSuperior;
+	}
+	public void setLimiteSuperior(Double limiteSuperior) {
+		this.limiteSuperior = limiteSuperior;
+	}
+	public void setLimiteDiario(Double limiteDiario) {
+		this.limiteDiario = limiteDiario;
 	}
 	
 	

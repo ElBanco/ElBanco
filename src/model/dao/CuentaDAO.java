@@ -32,16 +32,33 @@ public class CuentaDAO extends DAO{
 	
 	private final String LIST_BY_USER = "SELECT * FROM Cuenta WHERE NombreUsuario=?;";
 	
-	private final String UPDATE_SALDO = "UPDATE Cuenta SET Saldo=?, FechaModificacion=NOW() WHERE NumeroCuenta=?;";
+	private final String UPDATE_SALDO = "UPDATE Cuenta SET Saldo=?, FechaModificacion=? WHERE NumeroCuenta=?;";
 	
 	private final String GET = "SELECT * FROM Cuenta WHERE NumeroCuenta=?;"; 
+	
+	private final String UPDATE_BAJA = "UPDATE Cuenta SET FechaBaja=?, FechaModificacion=? WHERE NumeroCuenta=?;";
+	
+	private final String UPDATE_LIMITE_INFERIOR = "UPDATE Cuenta SET LimiteInferior=?, FechaModificacion=? WHERE NumeroCuenta=?;";
+	
+	private final String UPDATE_LIMITE_DIARIO = "UPDATE Cuenta SET LimiteDiario=?, FechaModificacion=? WHERE NumeroCuenta=?;";
 	
 	private final RandomStringGenerator stringGenerator = new RandomStringGenerator(9, RandomStringGenerator.StringType.NUMERIC);
 	
 	
 	@Override
-	void processRow(Object bean, ResultSet result) throws SQLException {
-		// TODO Auto-generated method stub
+	void processRow(Object bean, ResultSet rs) throws SQLException {
+		
+		if(bean instanceof Cuenta){
+			Cuenta account = (Cuenta) bean;
+			account.setNumeroCuenta(rs.getString("NumeroCuenta"));
+			account.setNombreUsuario(rs.getString("NombreUsuario"));
+			account.setSaldo(rs.getDouble("Saldo"));
+			account.setFechaCreacion(rs.getDate("FechaCreacion"));
+			account.setFechaModificacion(rs.getDate("FechaModificacion"));
+			account.setFechaBaja(rs.getDate("FechaBaja"));
+			account.setLimiteDiario(rs.getDouble("LimiteDiario"));
+			account.setLimiteInferior(rs.getDouble("LimiteInferior"));
+		}
 		
 	}
 	
@@ -55,7 +72,7 @@ public class CuentaDAO extends DAO{
 		
 		while(!validAccountNumber){
 			accountNumber = stringGenerator.newString();
-			validAccountNumber = checkPrimaryKey(accountNumber, GET);
+			validAccountNumber = checkUnique(accountNumber, GET);
 		}
 		
 		newAccount.setNumeroCuenta(accountNumber);
@@ -74,23 +91,18 @@ public class CuentaDAO extends DAO{
 		
 	}
 	
-	public List<Cuenta> listByUser(Usuario user) throws SQLException{
+	public List<Cuenta> listByUser(String nombreUsuario) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(LIST_BY_USER);
 		List<Cuenta> accounts = new ArrayList<Cuenta>();
 		
-		stmt.setString(1, user.getNombreUsuario());
+		stmt.setString(1, nombreUsuario);
 		ResultSet rs = stmt.executeQuery();
 		
 		Cuenta account;
 		while(rs.next()){
 			account = new Cuenta();
-			account.setNumeroCuenta(rs.getString("NumeroCuenta"));
-			account.setNombreUsuario(rs.getString("NombreUsuario"));
-			account.setSaldo(rs.getDouble("Saldo"));
-			account.setFechaCreacion(rs.getDate("FechaCreacion"));
-			account.setFechaModificacion(rs.getDate("FechaModificacion"));
-			account.setFechaBaja(rs.getDate("FechaBaja"));
+			processRow(account, rs);
 			accounts.add(account);
 		}
 		
@@ -100,13 +112,18 @@ public class CuentaDAO extends DAO{
 		
 	}
 	
-	public void updateBalance(Cuenta account, double balance) throws SQLException{
+	public void updateBalance(String numeroCuenta, double balance) throws SQLException{
 		
 		PreparedStatement stmt = conn.prepareStatement(UPDATE_SALDO);
+		DatesHelper datesHelper = new DatesHelper();
+		
 		stmt.setDouble(1, balance);
-		stmt.setString(2, account.getNumeroCuenta());
+		stmt.setDate(2, datesHelper.getSqlDate());
+		stmt.setString(3, numeroCuenta);
+		
 		stmt.executeUpdate();
 		stmt.close();
+		
 		
 	}
 	
@@ -120,18 +137,56 @@ public class CuentaDAO extends DAO{
 		
 		if(rs.next()){
 			account = new Cuenta();
-			account.setNumeroCuenta(rs.getString("NumeroCuenta"));
-			account.setNombreUsuario(rs.getString("NombreUsuario"));
-			account.setSaldo(rs.getDouble("Saldo"));
-			account.setFechaCreacion(rs.getDate("FechaCreacion"));
-			account.setFechaModificacion(rs.getDate("FechaModificacion"));
-			account.setFechaBaja(rs.getDate("FechaBaja"));
+			processRow(account, rs);
 		}
 		
 		return account;
 		
 	}
 	
+	public void darBaja(String numeroCuenta) throws SQLException{
+		
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_BAJA);
+		DatesHelper datesHelper = new DatesHelper();
+		
+		stmt.setDate(1, datesHelper.getSqlDate());
+		stmt.setDate(2, datesHelper.getSqlDate());
+		stmt.setString(3, numeroCuenta);
+		
+		stmt.executeUpdate();
+		stmt.close();
+		
+	}
+	
+	
+	public void cambiarLimiteInferior(String numeroCuenta, Double limiteInferior) throws SQLException{
+				
+	    PreparedStatement stmt = conn.prepareStatement(UPDATE_LIMITE_INFERIOR);
+	    DatesHelper datesHelper = new DatesHelper();
+		
+		stmt.setDouble(1, limiteInferior);
+	    stmt.setDate(2, datesHelper.getSqlDate());
+		stmt.setString(3, numeroCuenta);
+		
+		stmt.executeUpdate();
+		stmt.close();
+		
+	}
+	
+	
+	public void cambiarLimiteDiario(String numeroCuenta, Double limiteDiario) throws SQLException{
+				
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_LIMITE_DIARIO);
+		DatesHelper datesHelper = new DatesHelper();
 
+		stmt.setDouble(1, limiteDiario);
+		stmt.setDate(2, datesHelper.getSqlDate());
+		stmt.setString(3, numeroCuenta);
+	
+		stmt.executeUpdate();
+		stmt.close();
+		
+	}
+	
 	
 }

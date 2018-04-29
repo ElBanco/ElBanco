@@ -27,7 +27,7 @@ import javax.mail.internet.MimeMultipart;
 public class TLSEmail {
 	
 	
-	public static void sendEmailNewUser(String toEmail, String username, String password){
+	public static void sendEmailNewUser(String toEmail, String username, String password) throws MessagingException{
 		
 		String template = "Has sido registado en ElBanco. Tus credenciales son:\n\n" +
 				"\tnombre de usuario : %s\n" +
@@ -44,7 +44,7 @@ public class TLSEmail {
 	}
 	
 	
-	private static void sendEmail(String toEmail, String subject, String body){
+	private static void sendEmail(String toEmail, String subject, String body) throws MessagingException{
 		
 		final String fromEmail = "iiielbancoiii@gmail.com"; //requires valid gmail id
 		final String password = "elbanco123"; // correct password for gmail id
@@ -66,33 +66,35 @@ public class TLSEmail {
 		
 		Session session = Session.getInstance(props, auth);
 		
-		try
-	    {
-	      MimeMessage msg = new MimeMessage(session);
-	      //set message headers
-	      msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
-	      msg.addHeader("format", "flowed");
-	      msg.addHeader("Content-Transfer-Encoding", "8bit");
-
-	      msg.setFrom(new InternetAddress("iiielbancoiii@gmail.com", "ElBanco"));
-
-	      msg.setReplyTo(InternetAddress.parse("iiielbancoiii@gmail.com", false));
-
-	      msg.setSubject(subject, "UTF-8");
-
-	      msg.setText(body, "UTF-8");
-
-	      msg.setSentDate(new Date());
-
-	      msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
-	      System.out.println("Message is ready");
-    	  Transport.send(msg);  
-
-	      System.out.println("EMail Sent Successfully!!");
-	    }
-	    catch (Exception e) {
-	      e.printStackTrace();
-	    }
+		
+		  MimeMessage msg = new MimeMessage(session);
+		  //set message headers
+		  msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+		  msg.addHeader("format", "flowed");
+		  msg.addHeader("Content-Transfer-Encoding", "8bit");
+		
+		  try {
+			msg.setFrom(new InternetAddress("iiielbancoiii@gmail.com", "ElBanco"));
+			msg.setReplyTo(InternetAddress.parse("iiielbancoiii@gmail.com", false));
+			
+			  msg.setSubject(subject, "UTF-8");
+			
+			  msg.setText(body, "UTF-8");
+			
+			  msg.setSentDate(new Date());
+			
+			  msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
+			  System.out.println("Message is ready");
+			  Transport.send(msg);  
+			
+			  System.out.println("EMail Sent Successfully!!");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		  
+	    
 		
 	}
 

@@ -50,7 +50,7 @@ public class OperationService extends Service{
 				}
 				
 				if(dailyLimit != null &&
-						(opDAO.getDailyTranferenceSum(sourceAccount) + amount) > dailyLimit){
+						(opDAO.getDailyTranferenceSum(sourceAccountNumber) + amount) > dailyLimit){
 					result.setSuccessfulUpdate(false);
 					((OperationUpdateResult)result).setError(OperationError.DAYLY_LIMIT);
 					return;
@@ -63,8 +63,8 @@ public class OperationService extends Service{
 				transf.setNumeroCuentaDestino(destinationAccountNumber);
 				opDAO.addOp(transf);
 				
-				accountDAO.updateBalance(sourceAccount, sourceAccount.getSaldo() - amount);
-				accountDAO.updateBalance(destinationAccount, destinationAccount.getSaldo() + amount);
+				accountDAO.updateBalance(sourceAccountNumber, sourceAccount.getSaldo() - amount);
+				accountDAO.updateBalance(destinationAccountNumber, destinationAccount.getSaldo() + amount);
 					
 				result.setSuccessfulUpdate(true);
 				return;
@@ -79,7 +79,7 @@ public class OperationService extends Service{
 		return result;
 	}
 	
-	public OperationUpdateResult updateMonedero(final Usuario user, final double amount){
+	public OperationUpdateResult updateMonedero(final String nombreUsuario, final double amount){
 		
 		Updater updater = new Updater() {
 			
@@ -89,8 +89,8 @@ public class OperationService extends Service{
 				TarjetaDAO cardDAO = new TarjetaDAO(conn);
 				OperacionDAO opDAO = new OperacionDAO(conn);
 				
-				Monedero monedero = cardDAO.getMonedero(user);
-				cardDAO.updateMonedero(monedero, monedero.getSaldo() + amount);
+				Monedero monedero = cardDAO.getMonedero(nombreUsuario);
+				cardDAO.updateMonedero(nombreUsuario, monedero.getSaldo() + amount);
 				
 				UpdateMonedero updateMonedero = new UpdateMonedero();
 				updateMonedero.setCantidad(amount);

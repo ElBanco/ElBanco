@@ -29,8 +29,8 @@ public class ClientInfoServlet extends HttpServlet{
 		Usuario client = new UserService().getUser(username);
 
 		if(client != null){
-			List<Cuenta> cuentas = new AccountService().getAccounts(client);
-			Monedero monedero = new CardService().getMonedero(client);
+			List<Cuenta> cuentas = new AccountService().getAccounts(username);
+			Monedero monedero = new CardService().getMonedero(username);
 			req.setAttribute("client", client);
 			req.setAttribute("cuentas", cuentas);
 			req.setAttribute("monedero", monedero);

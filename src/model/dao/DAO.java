@@ -16,7 +16,7 @@ public abstract class DAO {
 	
 	abstract void processRow(Object bean, ResultSet result) throws SQLException;
 	
-	boolean checkPrimaryKey(String key, String getQuery) throws SQLException{
+	boolean checkUnique(String key, String getQuery) throws SQLException{
 		PreparedStatement ps = conn.prepareStatement(getQuery);
 	    ps.setString(1,key);
 	    ResultSet rs = ps.executeQuery();

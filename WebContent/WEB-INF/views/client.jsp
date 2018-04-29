@@ -28,12 +28,61 @@
 	  <c:forEach items="${cuentas}" var="cuenta">
          <p>numeroCuenta: ${cuenta.numeroCuenta}</p>
          <p>saldo: ${cuenta.saldo}</p>
+         <p>limiteDiario: ${cuenta.limiteDiario}</p>
+         <p>limiteInferior: ${cuenta.limiteInferior}</p>
       </c:forEach>
 	
 	
 	<form action="/ElBanco/logout" method="GET">
 		<input value="LOGOUT" type="submit" />
 	</form>
+	
+	
+	<h2>Cambiar Limite inferior de una cuenta ya creada</h2>
+	<form action="/ElBanco/client" method="POST">
+	
+		Numero de Cuenta : <input name="numeroCuenta" type="text"/> <br />
+		Limite Inferior: <input name="limiteInferior" type="text"/> <br />
+		
+		<input type="submit" name = "action" value="cambiarLimiteCuentaInferior"/>
+	</form>
+	
+	<h2>Cambiar Limite Diario de una cuenta ya creada</h2>
+	<form action="/ElBanco/client" method="POST">
+	
+		Numero de Cuenta : <input name="numeroCuenta" type="text"/> <br />
+		Limite Diario : <input name="limiteDiario" type="text"/> <br />
+
+		<input type="submit" name = "action" value="cambiarLimiteCuentaDiario"/>
+	</form>
+	
+	<h2>Cambiar Limite Superior del monedero</h2>
+	<form action="/ElBanco/client" method="POST">
+	
+		Nombre de Usuario : <input name="nombreUsuario" type="text"/> <br />
+		Limite Superior : <input name="limiteSuperior" type="text"/> <br />
+
+		<input type="submit" name = "action" value="cambiarLimiteMonedero"/>
+	</form>
+	
+	<h2>Cambiar Limite Superior de su tarjeta debito</h2>
+	<form action="/ElBanco/client" method="POST">
+	
+		Numero de Tarjeta : <input name="numeroTarjeta" type="text"/> <br />
+		Limite Superior : <input name="limiteSuperior" type="text"/> <br />
+
+		<input type="submit" name = "action" value="cambiarLimiteDebitoSuperior"/>
+	</form>
+	
+	<h2>Cambiar Limite Diario de su tarjeta debito</h2>
+	<form action="/ElBanco/client" method="POST">
+	
+		Numero de Tarjeta : <input name="numeroTarjeta" type="text"/> <br />
+		Limite Diario : <input name="limiteDiario" type="text"/> <br />
+
+		<input type="submit" name = "action" value="cambiarLimiteDebitoDiario"/>
+	</form>
+	
    </body>
    
 </html>

@@ -22,5 +22,18 @@ public class DatesHelper {
 	public java.sql.Date getSqlDate() {
 		return sqlDate;
 	}
+	
+	public java.util.Date obtenerFechaCaducidadUtil(int numYears){
+		
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.add(GregorianCalendar.YEAR, numYears);
+		return calendar.getTime();
+		
+	}
+	
+	public java.sql.Date obtenerFechaCaducidadSql(int numYears){
+		return new java.sql.Date(obtenerFechaCaducidadUtil(numYears).getTime());
+		
+	}	
 
 }

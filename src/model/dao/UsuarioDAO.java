@@ -26,23 +26,32 @@ public class UsuarioDAO extends DAO{
 			"NombreUsuario, RolID, Nombre, Apellidos, Email, Telefono, Direccion, HashContrasena, FechaCreacion, FechaModificacion) " +
 			"VALUES (?,?,?,?,?,?,?,SHA2(?, 256),?,?);";
 	
+	private final String UPDATE_BAJA = "UPDATE Usuario SET FechaBaja=?, FechaModificacion=? WHERE NombreUsuario=?;";
+	
+	public enum AddUserCode{
+		DUPLICATE_USER,
+		DUPLICATE_EMAIL,
+		OK;
+	}
+	
 	
 	
 	@Override
 	void processRow(Object bean, ResultSet rs) throws SQLException {
 		
-		Usuario user = (Usuario) bean;
-		
-		user.setNombreUsuario(rs.getString("NombreUsuario"));
-	    user.setRolID(rs.getString("RolID"));
-	    user.setNombre(rs.getString("Nombre"));
-	    user.setApellidos(rs.getString("Apellidos"));
-	    user.setDireccion(rs.getString("Direccion"));
-	    user.setEmail(rs.getString("Email"));
-	    user.setFechaCreacion(rs.getDate("FechaCreacion"));
-	    user.setFechaModificacion(rs.getDate("FechaModificacion"));
-	    user.setFechaBaja(rs.getDate("FechaBaja"));
-	    user.setTelefono(rs.getString("Telefono"));
+		if(bean instanceof Usuario){
+			Usuario user = (Usuario) bean;
+			user.setNombreUsuario(rs.getString("NombreUsuario"));
+		    user.setRolID(rs.getString("RolID"));
+		    user.setNombre(rs.getString("Nombre"));
+		    user.setApellidos(rs.getString("Apellidos"));
+		    user.setDireccion(rs.getString("Direccion"));
+		    user.setEmail(rs.getString("Email"));
+		    user.setFechaCreacion(rs.getDate("FechaCreacion"));
+		    user.setFechaModificacion(rs.getDate("FechaModificacion"));
+		    user.setFechaBaja(rs.getDate("FechaBaja"));
+		    user.setTelefono(rs.getString("Telefono"));
+		}
 		
 	}
 
@@ -107,12 +116,18 @@ public class UsuarioDAO extends DAO{
 
 	}
 
-	public void addUser(Usuario newUser, String password) throws SQLException {
+	public AddUserCode addUser(Usuario newUser, String password) throws SQLException {
+		
+		if(!checkUnique(newUser.getNombreUsuario(), GET_BY_USERNAME)){
+			return AddUserCode.DUPLICATE_USER;
+		}else if(!checkUnique(newUser.getEmail(), GET_BY_EMAIL)){
+			return AddUserCode.DUPLICATE_EMAIL;
+		}
 		
 		PreparedStatement stmt = conn.prepareStatement(INSERT);
-		DatesHelper datesFactory = new DatesHelper();
-		newUser.setFechaCreacion(datesFactory.getUtilDate());
-		newUser.setFechaModificacion(datesFactory.getUtilDate());
+		DatesHelper datesHelper = new DatesHelper();
+		newUser.setFechaCreacion(datesHelper.getUtilDate());
+		newUser.setFechaModificacion(datesHelper.getUtilDate());
 		
 		stmt.setString(1, newUser.getNombreUsuario());
 		stmt.setString(2, newUser.getRolID());
@@ -122,14 +137,30 @@ public class UsuarioDAO extends DAO{
 		stmt.setString(6, newUser.getTelefono());
 		stmt.setString(7, newUser.getDireccion());
 		stmt.setString(8, password);
-		stmt.setDate(9, datesFactory.getSqlDate());
-		stmt.setDate(10, datesFactory.getSqlDate());
+		stmt.setDate(9, datesHelper.getSqlDate());
+		stmt.setDate(10, datesHelper.getSqlDate());
 		
 		stmt.executeUpdate();
 		stmt.close();
 		
+		return AddUserCode.OK;
 		
 	}
+	
+	public boolean darBaja(String nombreUsuario) throws SQLException{
+		// TODO Auto-generated method stub
+		PreparedStatement stmt = conn.prepareStatement(UPDATE_BAJA);
+		DatesHelper datesHelper = new DatesHelper();
+		
+		stmt.setDate(1, datesHelper.getSqlDate());
+		stmt.setDate(2, datesHelper.getSqlDate());
+		stmt.setString(3, nombreUsuario);
+		 		 		
+		stmt.executeUpdate();
+		stmt.close();	
+		
+		return true;
+	}	 	
 
 	
 }
