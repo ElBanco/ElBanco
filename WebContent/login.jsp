@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="/css/estilos.css" type="text/css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet">
 </head>
 <!--background: #76b852;-->
@@ -19,6 +19,7 @@
 		<h1  title="ElBanco" > 
 			ErBanco
 		</h1> 
+		<p>${pageContext.request.contextPath} </p>
 	</div> 
 
 	<div class="login-page">
