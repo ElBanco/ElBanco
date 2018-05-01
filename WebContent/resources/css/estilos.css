@@ -9,6 +9,9 @@
   width: 100%;
   padding: 8% 0 0;
   margin: auto;
+  background: #6699ff;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 .Other-page h6 {
      font-weight: bold;
