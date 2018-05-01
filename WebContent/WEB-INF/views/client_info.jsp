@@ -22,7 +22,7 @@
     	if (cardFormVisible) {
     		var newdiv = document.createElement('div');
     		newdiv.setAttribute('id','CardFormDiv');
-        	newdiv.innerHTML = "Titular: <input type='text' name='titular'/> <br /><input type='submit' name='action' value='addDebitCard'/>";
+        	newdiv.innerHTML = "Titular <input type='text' name='titular'/> <br /><button type='submit' name='action' value='addDebitCard'>Confirmar</button>";
         	document.getElementById(divName).appendChild(newdiv);
         	cardFormVisible = false;
     	}else{
@@ -38,7 +38,7 @@
     	if (accountFormVisible) {
     		var newdiv = document.createElement('div');
     		newdiv.setAttribute('id','AccountFormDiv');
-        	newdiv.innerHTML = "Saldo: <input type='text' name='saldo'/> <br /><input type='submit' name='action' value='addAccount'/>";
+        	newdiv.innerHTML = "Saldo <input type='text' name='saldo'/> <br /><button type='submit' name='action' value='addAccount'>Confirmar</button>";
         	document.getElementById(divName).appendChild(newdiv);
         	accountFormVisible = false;
     	}else{
@@ -84,15 +84,15 @@
 	  <span>${client.email}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Telï¿½fono</h6>
+	  <h6>Teléfono</h6>
 	  <span>${client.telefono}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha Creaciï¿½n</h6>
+	  <h6>Fecha Creación</h6>
 	  <span>${client.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha modificaciï¿½n</h6>
+	  <h6>Fecha modificación</h6>
 	  <span>${client.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4">
@@ -100,8 +100,8 @@
 	  <span>${client.fechaBaja}</span>
 	  </div>
 	  </div>
-	   <br/>
-		  <button id="blackbutton" onclick="alert('Hello world!')">Dar de baja</button>
+	   <br/>	  	   
+	  <button id="blackbutton" onclick="sendPost('/ElBanco/admin/client_info', 'action=darBajaUsuario&nombreUsuarioBaja=${client.nombreUsuario}')">Dar usuario de baja</button>
 	
 	  </div>
 	  <div class="form-lg" >
@@ -110,7 +110,7 @@
   	  <div class="form-lg">
 	  <div class="row">
 	  <div class="col-3">
-	  <h6>Nï¿½mero de cuenta</h6>
+	  <h6>Número de cuenta</h6>
 	  <span>${cuenta.numeroCuenta}</span>
 	  </div>
 	  <div class="col-3">
@@ -118,19 +118,19 @@
 	  <span>${cuenta.saldo}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Lï¿½mite diario</h6>
+	  <h6>Límite diario</h6>
 	  <span>${cuenta.limiteDiario}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Lï¿½mite inferior</h6>
+	  <h6>Límite inferior</h6>
 	  <span>${cuenta.limiteInferior}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Fecha creaciï¿½n</h6>
+	  <h6>Fecha creación</h6>
 	  <span>${cuenta.fechaCreacion}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Fecha modificaciï¿½n</h6>
+	  <h6>Fecha modificación</h6>
 	  <span>${cuenta.fechaModificacion}</span>
 	  </div>
 	  <div class="col-3">
@@ -205,7 +205,7 @@
       </c:forEach>
       
 	  <br/>
-		  <button id="blackbutton" onclick="addAccountForm('${client.nombreUsuario}')">Aï¿½adir cuenta</button>
+		  <button id="blackbutton" onclick="addAccountForm('${client.nombreUsuario}')">Añadir cuenta</button>
 		  
 		  <form action="/ElBanco/admin/client_info" method="POST"> 
 	  		<input type="hidden" name="nombreUsuario" value="${client.nombreUsuario}">
@@ -226,7 +226,7 @@
       
 	  <div class="row">
 	  <div class="col-12">
-	  <h6>Nï¿½mero de tarjeta</h6>
+	  <h6>Número de tarjeta</h6>
 	  <span>${monedero.numeroTarjeta}</span>
 	  </div>
 	  <div class="col-4">
@@ -246,7 +246,7 @@
 	  <span>${monedero.fechaCancelacion}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha Creaciï¿½n</h6>
+	  <h6>Fecha creación</h6>
 	  <span>${monedero.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4">

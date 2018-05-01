@@ -16,6 +16,7 @@ import service.UpdateResult;
 import service.Cuenta.AccountService;
 import service.Tarjeta.CardService;
 import service.Usuario.UserService;
+import service.Usuario.UserUpdateResult;
 
 
 
@@ -56,6 +57,13 @@ public class ClientInfoServlet extends HttpServlet{
 		AccountService accountService = new AccountService();
 		if(numeroCuenta == null) return false;
 		UpdateResult result = accountService.darBajaCuenta(numeroCuenta);
+		return result.isSuccessfulUpdate();
+	}
+
+	private boolean darBajaUsuario(String nombreUsuario){
+		UserService userService = new UserService();
+		if(nombreUsuario == null) return false;
+		UserUpdateResult result = userService.darBajaUser(nombreUsuario);
 		return result.isSuccessfulUpdate();
 	}
 	
@@ -99,6 +107,7 @@ public class ClientInfoServlet extends HttpServlet{
 		// TODO Auto-generated method stub
 		String action = req.getParameter("action");
 		String numeroCuenta = req.getParameter("numeroCuenta");
+		String nombreUsuarioBaja = req.getParameter("nombreUsuarioBaja");
 		
 		if(action.equals("addDebitCard")){
 			String titular = req.getParameter("titular");
@@ -106,6 +115,10 @@ public class ClientInfoServlet extends HttpServlet{
 		}else if(action.equals("darBajaCuenta")){
 			if(darBajaCuenta(numeroCuenta)){
 				System.out.println("dar baja Cuenta");
+			}
+		}else if(action.equals("darBajaUsuario")){
+			if(darBajaUsuario(nombreUsuarioBaja)){
+				System.out.println("User dado de baja");
 			}
 		}else if(action.equals("darBajaMonedero")){
 			String monedero = req.getParameter("monedero");
