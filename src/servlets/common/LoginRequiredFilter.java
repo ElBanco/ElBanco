@@ -25,7 +25,7 @@ public class LoginRequiredFilter implements Filter {
 		
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		
-		boolean isStaticResource = request.getRequestURI().startsWith("/resources/");
+		boolean isStaticResource = request.getRequestURI().contains("resources/");
 		boolean loggedIn = request.getSession().getAttribute("user") != null;
 
 		if (loggedIn || isStaticResource) {
