@@ -1,0 +1,10 @@
+Enhorabuena has sido registado en ElBanco!!!
+
+Tus credenciales son:
+
+	nombre de usuario : %s
+	contraseña        : %s
+	
+Atentamente,
+
+ElBanco
