@@ -5,6 +5,22 @@
   padding: 8% 0 0;
   margin: auto;
 }
+.Other-page {
+  width: 100%;
+  padding: 8% 0 0;
+  margin: auto;
+}
+.form-lg {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    max-width: 800px;
+    margin: 0 auto 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
 .form {
   position: relative;
   z-index: 1;
@@ -15,7 +31,7 @@
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
-.form input {
+.form, .form-lg input {
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
@@ -26,7 +42,7 @@
   box-sizing: border-box;
   font-size: 14px;
 }
-.form button {
+.form, .form-lg  button {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
@@ -40,10 +56,11 @@
   transition: all 0.3 ease;
   cursor: pointer;
 }
-.form button:hover,.form button:active,.form button:focus {
+.form button:hover,.form button:active,.form button:focus,
+.form-lg button:hover,.form-lg button:active,.form-lg button:focus {
   background: #0066ff;
 }
-.form .message {
+.form .message, .form-lg .message {
   margin: 15px 0 0;
   color: #b3b3b3;
   font-size: 12px;
@@ -52,7 +69,14 @@
   color: #4CAF50;
   text-decoration: none;
 }
+.form-lg .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
 .form .register-form {
+  display: none;
+}
+.form-lg .register-form {
   display: none;
 }
 .container {
