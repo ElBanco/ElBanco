@@ -16,7 +16,7 @@ public class UsuarioDAO extends DAO{
 		// TODO Auto-generated constructor stub
 	}
 
-	private final String AUTH = "SELECT * FROM Usuario WHERE NombreUsuario=? AND HashContrasena=SHA2(?, 256);";
+	private final String AUTH = "SELECT * FROM Usuario WHERE FechaBaja is null && NombreUsuario=? AND HashContrasena=SHA2(?, 256);";
 	
 	private final String GET_BY_USERNAME = "SELECT * FROM Usuario WHERE NombreUsuario=?;";
 	

@@ -14,41 +14,16 @@ import service.Usuario.UserService;
 
 import model.beans.*;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/error")
+public class ErrorServlet extends HttpServlet {
 	
 	
 	
 	private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		
-		if((username == null) || (password == null)){
-			req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
+			req.getRequestDispatcher("/WEB-INF/views/error.html").forward(req, resp);
 			return;
-		}
 		
-		PrintWriter out = resp.getWriter();
-		Usuario user = new UserService().authenticate(username, password);
-
-		if(user != null){
-			req.getSession().setAttribute("user", user);
-			if(user.getRolID().equals("Administrador")){
-				resp.sendRedirect("/ElBanco/admin");
-			}else{
-				resp.sendRedirect("/ElBanco/client");
-			}
-		}else{
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Denegado</title>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("Access Denied");
-			out.println("</body>");
-			out.println("</html>");
-		}
 		
 
 	}

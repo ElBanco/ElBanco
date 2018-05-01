@@ -12,6 +12,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.beans.Usuario;
+import service.Usuario.UserService;
+
+
 @WebFilter(urlPatterns = "*")
 public class LoginRequiredFilter implements Filter {
 
@@ -26,10 +30,20 @@ public class LoginRequiredFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		
 		boolean isStaticResource = request.getRequestURI().contains("resources/");
+		boolean isAdminRequest = request.getRequestURI().contains("/admin");
 		boolean loggedIn = request.getSession().getAttribute("user") != null;
+		
+		boolean isAdmin = loggedIn && ((Usuario)(request.getSession().getAttribute("user"))).getRolID().equals("Administrador");
 
-		if (loggedIn || isStaticResource) {
+		if (isStaticResource) {
 			chain.doFilter(servletRequest, servletResponse);
+			}
+		else if (loggedIn && !isAdminRequest) {
+			chain.doFilter(servletRequest, servletResponse);
+		}else if (isAdminRequest && isAdmin) {
+			chain.doFilter(servletRequest, servletResponse);
+		}else if (isAdminRequest && !isAdmin) {
+			request.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
 		} else {
 			request.getRequestDispatcher("/login").forward(servletRequest, servletResponse);
 		}
