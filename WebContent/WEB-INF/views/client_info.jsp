@@ -14,6 +14,7 @@
    </head>
    
    <body>
+   <div class="Other-page">
    	  <h2>Datos Personales</h2>
       <p>nombreUsuario: ${client.nombreUsuario}</p>
       <p>nombre: ${client.nombre}</p>
@@ -92,6 +93,7 @@
 		<form action="/ElBanco/admin" method="GET">
 			<input value="VOLVER" type="submit" />
 		</form>
+		</div>
 	</body>
 
 </html>
