@@ -88,13 +88,13 @@ public class UserService extends Service{
 				monedero.setSaldo(0);
 				cardDAO.addTarjeta(monedero);
 				
-//				try {
-//					TLSEmail.sendEmailNewUser(newUser.email, newUser.getNombreUsuario(), password);
-//				} catch (MessagingException e) {
-//					result.setSuccessfulUpdate(false);
-//					((UserUpdateResult)result).setError(UserError.INVALID_EMAIL);
-//					return;
-//				}
+				try {
+					TLSEmail.sendEmailNewUser(newUser.email, newUser.getNombreUsuario(), password);
+				} catch (MessagingException e) {
+					result.setSuccessfulUpdate(false);
+					((UserUpdateResult)result).setError(UserError.INVALID_EMAIL);
+				return;
+				}
 				
 				result.setSuccessfulUpdate(true);
 				

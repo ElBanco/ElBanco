@@ -38,7 +38,7 @@
   <!-- <a href="/ElBanco/client/datos"><img class="mySlides" src="resources/yourself.jpg" style="width:auto; height:400px"> -->
 
   <div class="centered" id="carrousel2">Comprueba tus cuentas</div>
-  <div class="centered" id="carrousel1">Consulta tu tarjeta monederp</div>
+  <div class="centered" id="carrousel1">Consulta tu tarjeta monedero</div>
    <!--<div class="centered" id="carrousel3">Actualiza tus datos</div>-->
 </div>
 

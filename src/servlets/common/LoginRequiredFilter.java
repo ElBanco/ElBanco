@@ -29,31 +29,31 @@ public class LoginRequiredFilter implements Filter {
 		
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		
-		chain.doFilter(servletRequest, servletResponse);
+		//chain.doFilter(servletRequest, servletResponse);
 		
-//		boolean isStaticResource = request.getRequestURI().contains("resources/");
-//		boolean isAdminRequest = request.getRequestURI().contains("/admin");
-//		boolean loggedIn = request.getSession().getAttribute("user") != null;
-//		boolean loggingOut = request.getRequestURI().contains("/logout");
-//		boolean isAdmin = loggedIn && ((Usuario)(request.getSession().getAttribute("user"))).getRolID().equals("Administrador");
-//		
-//		
-//		if (isStaticResource || loggingOut) {
-//			chain.doFilter(servletRequest, servletResponse);
-//		}else if (loggedIn) {
-//			if(isAdminRequest && isAdmin){
-//				chain.doFilter(servletRequest, servletResponse);
-//			}else if(isAdminRequest && !isAdmin){
-//				request.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
-//			}else if(!isAdminRequest && isAdmin){
-//				request.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
-//			}else if(!isAdminRequest && !isAdmin){
-//				chain.doFilter(servletRequest, servletResponse);
-//			}	
-//		}else{
-//			System.out.println("login");
-//			request.getRequestDispatcher("/login").forward(servletRequest, servletResponse);
-//		}
+		boolean isStaticResource = request.getRequestURI().contains("resources/") || request.getRequestURI().contains("css") || request.getRequestURI().contains("jpg");
+		boolean isAdminRequest = request.getRequestURI().contains("/admin");
+		boolean loggedIn = request.getSession().getAttribute("user") != null;
+		boolean loggingOut = request.getRequestURI().contains("/logout");
+		boolean isAdmin = loggedIn && ((Usuario)(request.getSession().getAttribute("user"))).getRolID().equals("Administrador");
+		
+		
+		if (isStaticResource || loggingOut) {
+			chain.doFilter(servletRequest, servletResponse);
+		}else if (loggedIn) {
+			if(isAdminRequest && isAdmin){
+				chain.doFilter(servletRequest, servletResponse);
+			}else if(isAdminRequest && !isAdmin){
+				request.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+			}else if(!isAdminRequest && isAdmin){
+				request.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+			}else if(!isAdminRequest && !isAdmin){
+				chain.doFilter(servletRequest, servletResponse);
+			}	
+		}else{
+			System.out.println("login");
+			request.getRequestDispatcher("/login").forward(servletRequest, servletResponse);
+		}
 
 //		if (isStaticResource) {
 //			chain.doFilter(servletRequest, servletResponse);
