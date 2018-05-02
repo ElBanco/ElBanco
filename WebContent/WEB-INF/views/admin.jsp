@@ -162,13 +162,10 @@
 		</div>
 		</div>
 		<!--<input type="submit" name="action" value="addUser" />-->
-		<button type="submit" name="action" value="addUser">A�adir usuario</button>
+		<button type="submit" name="action" value="addUser">Nuevo usuario</button>
 	</form>
-	<button id="blackbutton" onclick="validateUserForm()">Prueba</button>
 </div>
-
-	  <div class="form-lg" >
-	
+</div>
 	
 </body>
 </html>

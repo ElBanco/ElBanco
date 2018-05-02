@@ -96,15 +96,15 @@
 	  <span>${client.email}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Tel�fono</h6>
+	  <h6>Telefono</h6>
 	  <span>${client.telefono}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha Creaci�n</h6>
+	  <h6>Fecha Creacion</h6>
 	  <span>${client.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha modificaci�n</h6>
+	  <h6>Fecha modificacion</h6>
 	  <span>${client.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4" id="baja_${client.nombreUsuario}">
@@ -126,7 +126,7 @@
   	  <div class="form-lg">
 	  <div class="row">
 	  <div class="col-3">
-	  <h6>N�mero de cuenta</h6>
+	  <h6>Numero de cuenta</h6>
 	  <span>${cuenta.numeroCuenta}</span>
 	  </div>
 	  <div class="col-3">
@@ -134,19 +134,19 @@
 	  <span>${cuenta.saldo}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>L�mite diario</h6>
+	  <h6>Limite diario</h6>
 	  <span>${cuenta.limiteDiario}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>L�mite inferior</h6>
+	  <h6>Limite inferior</h6>
 	  <span>${cuenta.limiteInferior}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Fecha creaci�n</h6>
+	  <h6>Fecha creacion</h6>
 	  <span>${cuenta.fechaCreacion}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Fecha modificaci�n</h6>
+	  <h6>Fecha modificacion</h6>
 	  <span>${cuenta.fechaModificacion}</span>
 	  </div>
 	  <div class="col-3" id="baja_${cuenta.numeroCuenta}">
@@ -157,11 +157,11 @@
 	  <br/>
 	  <div class="row">
 	  <div class="col-6">
-	  <button id="blackbutton" onclick="toggleDiv('${cuenta.numeroCuenta}')">Crear tarjeta</button>
+	  <button id="blackbutton" onclick="toggleDiv('${cuenta.numeroCuenta}')">Ver tarjetas</button>
 	  
 	  <div id="${cuenta.numeroCuenta}" style="display: none;">
 	  <form action="/ElBanco/admin/client_info?action=addDebitCard" method="POST" onsubmit="return validateCardForm('${cuenta.numeroCuenta}')">
-	  Titular: <input type='text' name='titular'/>
+	  Titular <input type='text' name='titular'/>
 	  <input type="hidden" name="numeroCuenta" value="${cuenta.numeroCuenta}">
 	  <input type="submit" value="Enviar" id="blackbutton">
 	  </form>
@@ -179,61 +179,14 @@
 	  </div>
 	  </div>
 	  </div>
-         <!-- <p>numeroCuenta: ${cuenta.numeroCuenta}</p>
-      	 <p>nombreUsuario: ${cuenta.nombreUsuario}</p>
-         <p>saldo: ${cuenta.saldo}</p>
-         <p>limiteDiario: ${cuenta.limiteDiario}</p>
-         <p>limiteInferior: ${cuenta.limiteInferior}</p>
-         <p>fechaCreacion: ${cuenta.fechaCreacion}</p>
-         <p>fechaModificacion: ${cuenta.fechaModificacion}</p>
-        <p>fechaBaja: ${cuenta.fechaBaja}</p>
-        
-        <div id="infocuenta" style="margin:2%;">
-			<table class="tg" style="undefined;table-layout: fixed; width: 100%;">
-				<colgroup>
-				<col style="width: 215.2px">
-				<col style="width: 112.2px">
-				<col style="width: 101.2px">
-				<col style="width: 101.2px">
-				<col style="width: 24.2px">
-				<col style="width: 142.2px">
-				<col style="width: 22.2px">
-				<col style="width: 151px">
-				</colgroup>
-				 <tr>
-				   <th class="tg-ng61" colspan="8">Cuenta</th>
-				 </tr>
-				 <tr>
-				   <td class="tg-8qkv" rowspan="3">${cuenta.numeroCuenta}<br></td>
-				   <td class="tg-7boo">Saldo</td>
-				   <td class="tg-7boo" colspan="2">${cuenta.saldo}<br></td>
-				   <td class="tg-uys7"></td>
-				   <td class="tg-uys7" rowspan="3"><button id="blackbutton" type="button" onclick="alert('Hello world!')">realizar nueva operacion</button><br></td>
-				   <td class="tg-uys7"></td>
-				   <td class="tg-uys7" rowspan="3"><button id="blackbutton" onclick="alert('Hello world!')">ver ultimas operaciones</button><br></td>
-				 </tr>
-				 <tr>
-				   <td class="tg-w9sc">Limite diario<br></td>
-				   <td class="tg-w9sc" colspan="2">${cuenta.limiteDiario} €</td>
-				   <td class="tg-uys7"></td>
-				   <td class="tg-uys7"></td>
-				 </tr>
-				 <tr>
-				   <td class="tg-w9sc">Limite inferior<br></td>
-				   <td class="tg-w9sc" colspan="2">${cuenta.limiteInferior} €</td>
-				   <td class="tg-uys7"></td>
-				   <td class="tg-uys7"></td>
-				 </tr>
-			</table>
-		</div> -->
       </c:forEach>
       
 	  <br/>
-		  <button id="blackbutton" onclick="toggleDiv('${client.nombreUsuario}')">A�adir cuenta</button>
+		  <button id="blackbutton" onclick="toggleDiv('${client.nombreUsuario}')">Nueva cuenta</button>
 		  
 		  <div id="${client.nombreUsuario}" style="display: none;">
 	  	  <form action="/ElBanco/admin/client_info?action=addAccount" method="POST" onsubmit="return validateAccountForm('${client.nombreUsuario}')">
-	  	  Saldo: <input type='text' name='saldo'/>
+	  	  Saldo <input type='text' name='saldo'/>
 	  	  <input type="hidden" name="nombreUsuario" value="${client.nombreUsuario}">
 	  	  <input type="submit" value="Enviar" id="blackbutton">
 	  	  </form>
@@ -253,7 +206,7 @@
       
 	  <div class="row">
 	  <div class="col-12">
-	  <h6>N�mero de tarjeta</h6>
+	  <h6>Numero de tarjeta</h6>
 	  <span>${monedero.numeroTarjeta}</span>
 	  </div>
 	  <div class="col-4">
@@ -273,7 +226,7 @@
 	  <span>${monedero.fechaCancelacion}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha creaci�n</h6>
+	  <h6>Fecha creacion</h6>
 	  <span>${monedero.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4" id="baja_${monedero.numeroTarjeta}">
