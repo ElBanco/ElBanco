@@ -9,7 +9,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="../resources/css/estilos.css" type="text/css">
+  <link rel="stylesheet" href="/ElBanco/resources/css/estilos.css" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet">
   
   <script language="Javascript" type="text/javascript"> 
@@ -24,39 +24,6 @@
     	div.style.display = div.style.display == "none" ? "block" : "none";
     	
     } 
-    
-    function validateCardForm(divName){
-    
-    	var form = document.getElementById(divName).getElementsByTagName('form')[0];
-    	var input = form.getElementsByTagName('input')[0];
-    	
-    	if(input.value == ""){
-    		return false;
-    	}
-    	
-    }
-    
-    function validateAccountForm(divName){
-    
-    	var form = document.getElementById(divName).getElementsByTagName('form')[0];
-    	var input = form.getElementsByTagName('input')[0];
-    	var saldo = parseFloat(input.value)
-    	
-    	if(input.value == ""){
-    		console.log("vacio");
-    		return false;
-    	}else if(isNaN(saldo)){
-    		console.log("nan");
-    		return false;
-    	}else if(saldo < 0){
-    		console.log("negativo");
-    		return false;
-    	}else{
-    		console.log("bien");
-    		input.value = saldo;
-    	}
-    	
-    }
     
     function validateBaja(divName){
     
@@ -99,7 +66,7 @@
 	  </div>
 	  <div class="col-4">
 	  <h6>Titular</h6>
-	  <span>${tarjeta.nombreUsuario}</span>
+	  <span>${tarjeta.titular}</span>
 	  </div>
 	  <div class="col-4">
 	  <h6>Fecha Cancelacion</h6>
@@ -117,38 +84,22 @@
 	  <br/>
 	  
 	  <div class="row">
-	   <div class="col-12">
+	  <div class="col-12">
 	  
-	  <form action="/ElBanco/admin/client_info?action=darBajaTarjetaDebito" method="POST" onsubmit="return validateBajaDebito('${tarjeta.numeroTarjeta}')">
+	  <form action="/ElBanco/admin/client_info?action=darBajaTarjeta" method="POST" onsubmit="return validateBaja('${tarjeta.numeroTarjeta}')">
 	  <input type="hidden" name="numeroTarjeta" value="${tarjeta.numeroTarjeta}">
 	  <input type="submit" value="Dar tarjeta de baja" id="blackbutton">
 	  </form>
 	  
 	  </div>
 	  </div>
-	  </div>
-      </c:forEach>
-	  <div class="row">
-	  <div class="col-12">
-	  <button id="blackbutton" onclick="toggleDiv('${cuenta.numeroCuenta}')">Crear tarjeta</button>
-	  
-	  <div id="${cuenta.numeroCuenta}" style="display: none;">
-	  <form action="/ElBanco/admin/client_info?action=addDebitCard" method="POST" onsubmit="return validateCardForm('${cuenta.numeroCuenta}')">
-	  Titular <input type='text' name='titular'/>
-	  <input type="hidden" name="numeroCuenta" value="${cuenta.numeroCuenta}">
-	  <input type="submit" value="Enviar" id="blackbutton">
-	  </form>
-	  </div>
-	  
-	  </div>
-	  </div>
-	  </div>
+	 </div>
+	 </c:forEach>
       
-	  <br/>
-	  	 
-		<div class="form-lg" >
+	  </div>
+      <div class="form-lg" >
 	
-		<form action="/ElBanco/admin" method="GET">
+		<form action="/ElBanco/admin/client_info" method="GET">
 	  		<button type="submit" value="VOLVER">VOLVER</button>
 		</form>
 		</div>

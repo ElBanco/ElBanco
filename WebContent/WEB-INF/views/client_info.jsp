@@ -156,9 +156,8 @@
 	  </div>
 	  <br/>
 	  <div class="row">
-	  <div class="col-6">
-	  <button id="blackbutton" onclick="toggleDiv('${cuenta.numeroCuenta}')">Ver tarjetas</button>
-	  
+	  <div class="col-4">
+	  <button id="blackbutton" onclick="toggleDiv('${cuenta.numeroCuenta}')">Nueva tarjeta</button>
 	  <div id="${cuenta.numeroCuenta}" style="display: none;">
 	  <form action="/ElBanco/admin/client_info?action=addDebitCard" method="POST" onsubmit="return validateCardForm('${cuenta.numeroCuenta}')">
 	  Titular <input type='text' name='titular'/>
@@ -169,14 +168,20 @@
 	  
 	  </div>
 	  
-	  <div class="col-6">
+	  <div class="col-4">
+	  <form action="/ElBanco/admin/client_info/tarjetas" method="GET">
+	  <input type="hidden" name="numeroCuenta" value="${cuenta.numeroCuenta}">
+	  <input type="submit" value="Ver Tarjetas" id="blackbutton">
+	  </form>
+	  </div>
 	  
+	  <div class="col-4">
 	  <form action="/ElBanco/admin/client_info?action=darBajaCuenta" method="POST" onsubmit="return validateBaja('${cuenta.numeroCuenta}')">
 	  <input type="hidden" name="numeroCuenta" value="${cuenta.numeroCuenta}">
 	  <input type="submit" value="Dar cuenta de baja" id="blackbutton">
 	  </form>
-	  
 	  </div>
+	  
 	  </div>
 	  </div>
       </c:forEach>
@@ -243,6 +248,7 @@
 	
 	
 	  </div>
+	  
 		  <div class="form-lg" >
 	
 		<form action="/ElBanco/admin" method="GET">

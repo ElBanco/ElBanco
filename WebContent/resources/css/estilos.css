@@ -12,6 +12,7 @@
   background: #6699ff;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100%;
 }
 .Other-page h6 {
      font-weight: bold;
