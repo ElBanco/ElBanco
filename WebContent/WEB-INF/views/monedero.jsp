@@ -68,25 +68,23 @@
 	  <div class="form-lg" >
 	  <h2>Monedero</h2>
 	  
-  	  <div class="form-lg">
 	  <div class="row">
-	  
-	  <div class="col-8">
+	  <div class="col-4">
 	  <h6>Usuario</h6>
 	  <span>${monedero.nombreUsuario}</span>
 	  </div>
 	  
-	  <div class="col-8">
+	  <div class="col-4">
 	  <h6>Saldo</h6>
 	  <span>${monedero.saldo}</span>
 	  </div>
 	  
-	  <div class="col-8">
+	  <div class="col-4">
 	  <h6>PIN</h6>
 	  <span>${monedero.pin}</span>
 	  </div>
 	  
-	  <div class="col-8">
+	  <div class="col-4">
 	  <h6>PIN</h6>
 	  <span>${monedero.pin}</span>
 	  </div>
@@ -110,7 +108,9 @@
 	  <h6>Limite Superior</h6>
 	  <span>${monedero.limiteSuperior}</span>
 	  </div>
+	  </div>
 	  
+	  <br/>
 	  <div class="row">
 	  <div class="col-6">
 	  
@@ -134,10 +134,8 @@
 	  </div>
 	  </div>
 	  
-	  </div>
 	  <br/>
 	  
-	 </div>
       
       
 	

@@ -39,6 +39,7 @@
 	  <a href="#contact">Operaciones</a>
 	  <a href="#about">Datos</a>
 	  <a href="#about" style="float: right;">Cerrar sesion</a>
+	  
 	  <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
 	</div>
 

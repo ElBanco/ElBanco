@@ -7,11 +7,12 @@
 }
 .Other-page {
   width: 100%;
-  padding: 8% 0 0;
+  padding: 5% 0 5%;
   margin: auto;
   background: #6699ff;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100%;
 }
 .Other-page h6 {
      font-weight: bold;

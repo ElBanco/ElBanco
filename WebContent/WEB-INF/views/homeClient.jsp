@@ -24,19 +24,22 @@
 	  <a href="/ElBanco/client" class="active">Home</a>
 	  <a href="/ElBanco/client/cuentas?nombreUsuario=${user.nombreUsuario}">Cuentas</a>
 	  <a href="/ElBanco/client/monedero?nombreUsuario=${user.nombreUsuario}">Monedero</a>
-	  <a href="/ElBanco/client/datos?nombreUsuario=${user.nombreUsuario}">Datos</a>
-	  <a href="#about" style="float: right;">Cerrar sesion</a>
+	  <!--<a href="/ElBanco/client/datos?nombreUsuario=${user.nombreUsuario}">Datos</a>-->
+	  <a href="/ElBanco/logout"  style="float: right;">Cerrar sesion</a>
+	  <!--<form action="/ElBanco/logout" method="GET">
+		<button type="submit" value="LOGOUT">LOGOUT</button>
+	</form>-->
 	  <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
 	</div>
 
-<div style="padding:4%">
-  <a href="/ElBanco/client/cuentas"><img class="mySlides" src="./Figures/money.jpg" style="width:100%; height:800px; opacity:0.5"></a>
-  <a href="/ElBanco/client/operaciones"><img class="mySlides" src="./Figures/tarjetas.jpg" style="width:100%; height:800px; opacity:0.7">
-  <a href="/ElBanco/client/datos"><img class="mySlides" src="./Figures/yourself.jpg" style="width:100%; height:800px">
+<div style="padding:8%">
+  <a href="/ElBanco/client/cuentas?nombreUsuario=${user.nombreUsuario}"><img class="mySlides" src="resources/money.jpg" style="width:auto; height:400px; opacity:0.5"></a>
+  <a href="/ElBanco/client/monedero?nombreUsuario=${user.nombreUsuario}"><img class="mySlides" src="resources/tajeta.jpg" style="width:auto; height:400px; opacity:0.7"></a>
+  <!-- <a href="/ElBanco/client/datos"><img class="mySlides" src="resources/yourself.jpg" style="width:auto; height:400px"> -->
 
   <div class="centered" id="carrousel2">Comprueba tus cuentas</div>
-  <div class="centered" id="carrousel1">Consulta tus ultimas operaciones</div>
-  <div class="centered" id="carrousel3">Actualiza tus datos</div>
+  <div class="centered" id="carrousel1">Consulta tu tarjeta monederp</div>
+   <!--<div class="centered" id="carrousel3">Actualiza tus datos</div>-->
 </div>
 
 <script>

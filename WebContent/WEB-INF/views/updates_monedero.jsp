@@ -108,12 +108,12 @@
   	  <div class="form-lg">
 	  <div class="row">
 	  
-	  <div class="col-8">
+	  <div class="col-6">
 	  <h6>Fecha</h6>
 	  <span>${update.fecha}</span>
 	  </div>
 	  
-	  <div class="col-4">
+	  <div class="col-6">
 	  <h6>Cantidad</h6>
 	  <span>${update.cantidad}</span>
 	  </div>

@@ -162,11 +162,16 @@
 		</div>
 		</div>
 		<!--<input type="submit" name="action" value="addUser" />-->
-		<button type="submit" name="action" value="addUser">A�adir usuario</button>
+		<button type="submit" name="action" value="addUser">Crear usuario</button>
 	</form>
 </div>
 
-	  <div class="form-lg" >
+	 <div class="form-lg" >
+	<form action="/ElBanco/logout" method="GET">
+		<!-- <input value="LOGOUT" type="submit" />-->
+		<button type="submit" value="LOGOUT">LOGOUT</button>
+	</form>
+	</div>
 	
 	
 </body>

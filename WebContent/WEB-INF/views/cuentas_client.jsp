@@ -107,9 +107,14 @@
   	  <div class="form-lg">
 	  <div class="row">
 	  
-	  <div class="col-8">
+	  <div class="col-4">
 	  <h6>Numero de cuenta</h6>
 	  <span>${cuenta.numeroCuenta}</span>
+	  </div>
+	  
+	  <div class="col-4">
+	  <h6>Saldo</h6>
+	  <span>${cuenta.saldo}</span>
 	  </div>
 	  
 	  <div class="col-4">
