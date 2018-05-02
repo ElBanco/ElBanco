@@ -46,7 +46,7 @@ public class TarjetaDAO extends DAO{
 	
 	private final String GET_TARJETA = "SELECT * FROM Tarjeta WHERE NumeroTarjeta=?;";
 	
-	private final String GET_DEBIT_CARD = "SELECT NumeroTarjeta FROM Tarjeta WHERE NumeroCuenta=?;";
+	private final String GET_DEBIT_CARD = "SELECT * FROM Tarjeta WHERE NumeroCuenta=?;";
 	
 	private final String DAR_BAJA_TARJETA = "UPDATE Tarjeta SET FechaBaja=? WHERE NumeroTarjeta=?;";
 	
@@ -182,15 +182,19 @@ public class TarjetaDAO extends DAO{
 	public List<TarjetaDebito> listDebitCardByAccount(String numeroCuenta) throws SQLException{
 				
 		PreparedStatement stmt = conn.prepareStatement(GET_DEBIT_CARD);
+		
 		List<TarjetaDebito> debitCards = new ArrayList<TarjetaDebito>();
 			 		
 		stmt.setString(1, numeroCuenta);
 		ResultSet rs = stmt.executeQuery();
+		System.out.println(rs.getStatement().toString());
  			 		
  		TarjetaDebito debitCard;		
 		while(rs.next()){
+			System.out.println("entro");
 			debitCard = new TarjetaDebito();
 			processRow(debitCard, rs);
+			System.out.println(debitCard.getNumeroCuenta());
 			debitCards.add(debitCard);
 		}
 		

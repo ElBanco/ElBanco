@@ -4,7 +4,10 @@ import java.io.IOException;
 import model.beans.*;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +24,97 @@ import service.Usuario.UserUpdateResult;
 
 
 
-@WebServlet("/admin/client_info")
+@WebServlet("/admin/client_info/*")
 public class ClientInfoServlet extends HttpServlet{
+	
+	private void clientInfoDispatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		
+		String username = null;
+		Usuario client = null;
+		HttpSession session = req.getSession();
+		
+		
+		if(req.getParameter("nombreUsuario") != null){
+			client = new UserService().getUser(req.getParameter("nombreUsuario"));
+			if(client != null){
+				username = req.getParameter("nombreUsuario");
+				session.setAttribute("nombreUsuario", username);
+			}
+		}else if(session.getAttribute("nombreUsuario") != null){
+			client = new UserService().getUser((String) session.getAttribute("nombreUsuario"));
+			if(client != null){
+				username = (String) session.getAttribute("nombreUsuario");
+				req.setAttribute("message", session.getAttribute("message"));
+				session.setAttribute("message", null);
+			}
+		}
+
+		if(client != null){
+			List<Cuenta> cuentas = new AccountService().getAccounts(username);
+			Monedero monedero = new CardService().getMonedero(username);
+			req.setAttribute("client", client);
+			req.setAttribute("cuentas", cuentas);
+			req.setAttribute("monedero", monedero);
+			req.getRequestDispatcher("/WEB-INF/views/client_info.jsp").forward(req, resp);
+		}else{
+			PrintWriter out = resp.getWriter();
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<title>Prueba</title>");
+			out.println("</head>");
+			out.println("<body>");
+			out.println("User Not Found");
+			out.println("</body>");
+			out.println("</html>");
+		}
+	}
+	
+	private void tarjetasInfoDispatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		
+		String numeroCuenta = null;
+		List<TarjetaDebito> tarjetas = new ArrayList<TarjetaDebito>();
+		HttpSession session = req.getSession();
+		
+		if(req.getParameter("numeroCuenta") != null){
+			tarjetas = new CardService().getDebitCards(req.getParameter("numeroCuenta"));
+			if(!tarjetas.isEmpty()){
+				numeroCuenta = req.getParameter("numeroCuenta");
+				session.setAttribute("numeroCuenta", numeroCuenta);
+			}
+		}else if(session.getAttribute("numeroCuenta") != null){
+			tarjetas = new CardService().getDebitCards((String) session.getAttribute("numeroCuenta"));
+			if(!tarjetas.isEmpty()){
+				numeroCuenta = (String) session.getAttribute("numeroCuenta");
+				req.setAttribute("message", session.getAttribute("message"));
+				session.setAttribute("message", null);
+			}
+		}
+		
+		if(!tarjetas.isEmpty()){
+			req.setAttribute("tarjetas", tarjetas);
+			req.getRequestDispatcher("/WEB-INF/views/ver_tarjetas.jsp").forward(req, resp);
+		}else{
+			PrintWriter out = resp.getWriter();
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<title>Prueba</title>");
+			out.println("</head>");
+			out.println("<body>");
+			out.println("No hay tarjetas");
+			out.println("</body>");
+			out.println("</html>");
+		}
+		
+		
+	}
+	
+	private boolean darBajaTarjeta(String numeroTarjeta){
+		CardService cardService = new CardService();
+		if(numeroTarjeta == null) return false;
+		UpdateResult result = cardService.darBajaTarjeta(numeroTarjeta);
+		return result.isSuccessfulUpdate();	
+	}
+	
 	
 	private boolean addDebitCard(String titular, String numeroCuenta){
 		
@@ -79,43 +171,13 @@ public class ClientInfoServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String username = null;
-		Usuario client = null;
-		HttpSession session = req.getSession();
+		String path = req.getRequestURI();
+		if(path.equals("/ElBanco/admin/client_info")){
+			clientInfoDispatch(req, resp);
+		}else if(path.equals("/ElBanco/admin/client_info/tarjetas")){
+			tarjetasInfoDispatch(req, resp);
+		}
 		
-		if(req.getParameter("nombreUsuario") != null){
-			client = new UserService().getUser(req.getParameter("nombreUsuario"));
-			if(client != null){
-				username = req.getParameter("nombreUsuario");
-				session.setAttribute("nombreUsuario", username);
-			}
-		}else if(session.getAttribute("nombreUsuario") != null){
-			client = new UserService().getUser((String) session.getAttribute("nombreUsuario"));
-			if(client != null){
-				username = (String) session.getAttribute("nombreUsuario");
-				req.setAttribute("message", session.getAttribute("message"));
-				session.setAttribute("message", null);
-			}
-		}
-
-		if(client != null){
-			List<Cuenta> cuentas = new AccountService().getAccounts(username);
-			Monedero monedero = new CardService().getMonedero(username);
-			req.setAttribute("client", client);
-			req.setAttribute("cuentas", cuentas);
-			req.setAttribute("monedero", monedero);
-			req.getRequestDispatcher("/WEB-INF/views/client_info.jsp").forward(req, resp);
-		}else{
-			PrintWriter out = resp.getWriter();
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Prueba</title>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("User Not Found");
-			out.println("</body>");
-			out.println("</html>");
-		}
 	}
 
 	@Override
@@ -162,11 +224,22 @@ public class ClientInfoServlet extends HttpServlet{
 			}else{
 				message = "Error añadiendo cuenta";
 			}
+		}else if(action.equals("darBajaTarjeta")){
+			String numeroTarjeta = req.getParameter("numeroTarjeta");
+			if(darBajaTarjeta(numeroTarjeta)){
+				message = "Tarjeta dada de baja con exito";
+			}else{
+				message = "Error dando de baja tarjeta";
+			}
 		}
 		
 		HttpSession session = req.getSession();
 		session.setAttribute("message", message);
-		resp.sendRedirect("/ElBanco/admin/client_info");
+		if(action.equals("darBajaTarjeta")){
+			resp.sendRedirect("/ElBanco/admin/client_info/tarjetas");
+		}else{
+			resp.sendRedirect("/ElBanco/admin/client_info");
+		}
 		
 		
 	}
