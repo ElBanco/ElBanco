@@ -31,7 +31,7 @@ public class TLSEmail {
 		
 		String template = "Has sido registado en ElBanco. Tus credenciales son:\n\n" +
 				"\tnombre de usuario : %s\n" +
-				"\tcontraseÃ±a        : %s\n\n" +
+				"\tcontraseña        : %s\n\n" +
 				"Atentamente,\n" +
 				"ElBanco";
 		String body = String.format(template, username, password);

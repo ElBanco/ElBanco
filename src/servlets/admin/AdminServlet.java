@@ -70,7 +70,7 @@ public class AdminServlet extends HttpServlet{
 		String message = "";
 		
 		if(result.isSuccessfulUpdate()){
-			message = "Usuario aÃ±adido con exito";
+			message = "Usuario añadido con exito";
 			return message;
 		}
 		
@@ -82,7 +82,7 @@ public class AdminServlet extends HttpServlet{
 				break;
 	
 			case DUPLICATED_EMAIL:
-				message = "DirecciÃ³n de correo no disponible";
+				message = "Dirección de correo no disponible";
 				break;
 				
 			default:

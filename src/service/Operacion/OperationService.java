@@ -31,7 +31,11 @@ public class OperationService extends Service{
 					((OperationUpdateResult)result).setError(OperationError.UNKOWN_ACCOUNT);
 					return;
 				}
-				
+				else if(sourceAccountNumber.equals(destinationAccountNumber)){
+					result.setSuccessfulUpdate(false);
+					((OperationUpdateResult)result).setError(OperationError.UNKOWN_ACCOUNT);
+					return;
+				}
 				Double lowerLimit = sourceAccount.getLimiteInferior();
 				System.out.println(lowerLimit);
 				Double balance = sourceAccount.getSaldo();
