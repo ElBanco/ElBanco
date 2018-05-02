@@ -2,7 +2,9 @@ package model.services;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
+import utils.MultipleResultHandler;
 import utils.UpdateHandler;
 
 import model.beans.*;
@@ -86,5 +88,35 @@ public class OperationService extends Service{
 		};
 		
 		return doTransaction(updateHandler);
+	}
+	
+	
+	public List<Transferencia> getOps(final Cuenta cuenta){
+		
+		MultipleResultHandler<Transferencia>  handler = new MultipleResultHandler<Transferencia>() {
+			
+			@Override
+			public List<Transferencia> handle(Connection conn) throws SQLException {
+				OperacionDAO opDAO = new OperacionDAO(conn);
+				return opDAO.listTransferences(cuenta);
+			}
+		};
+		return doSelect(handler);
+
+	}
+	
+	
+	public List<UpdateMonedero> getOpsMonedero(final Usuario user){
+		
+		MultipleResultHandler<UpdateMonedero>  handler = new MultipleResultHandler<UpdateMonedero>() {
+			
+			@Override
+			public List<UpdateMonedero> handle(Connection conn) throws SQLException {
+				OperacionDAO opDAO = new OperacionDAO(conn);
+				return opDAO.listUpdatesMonedero(user);
+			}
+		};
+		return doSelect(handler);
+
 	}
 }

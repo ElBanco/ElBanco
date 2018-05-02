@@ -91,6 +91,8 @@ public class CuentaDAO extends DAO{
 			account.setFechaCreacion(rs.getDate("FechaCreacion"));
 			account.setFechaModificacion(rs.getDate("FechaModificacion"));
 			account.setFechaBaja(rs.getDate("FechaBaja"));
+			account.setLimiteDiario(rs.getDouble("limiteDiario"));
+			account.setLimiteInferior(rs.getDouble("limiteInferior"));
 			accounts.add(account);
 		}
 		
@@ -126,6 +128,8 @@ public class CuentaDAO extends DAO{
 			account.setFechaCreacion(rs.getDate("FechaCreacion"));
 			account.setFechaModificacion(rs.getDate("FechaModificacion"));
 			account.setFechaBaja(rs.getDate("FechaBaja"));
+			account.setLimiteDiario(rs.getDouble("LimiteDiario"));
+			account.setLimiteInferior(rs.getDouble("LimiteInferior"));
 		}
 		
 		return account;

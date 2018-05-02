@@ -36,7 +36,7 @@ public class OperacionDAO extends DAO{
 	
 	private final String DAILY_TRANSFERENCES_SUM = "SELECT SUM(Cantidad) FROM Operacion WHERE NumeroCuentaOrigen=? AND DATE(Fecha)=CURDATE();";
 	
-	private final String LIST_TRANSFERENCES = "SELECT * FROM Operacion WHERE (NumeroCuentaOrigen=? OR NumeroCuentaDestino=?) AND Discriminador=Transfer;";
+	private final String LIST_TRANSFERENCES = "SELECT * FROM Operacion WHERE (NumeroCuentaOrigen=? OR NumeroCuentaDestino=?);"; // AND Discriminador=Transfer;";
 	
 	private final String LIST_UPDATES_MONEDERO = "SELECT * FROM Operacion WHERE NombreUsuario=? AND Discriminador=UpdateMonedero;";
 	
@@ -122,13 +122,20 @@ public class OperacionDAO extends DAO{
 		Transferencia t;
 		while(rs.next()){
 			t = new Transferencia();
-			processRow(t, rs);
+			t.setCantidad(rs.getDouble("Cantidad"));
+			t.setFecha(rs.getDate("Fecha"));
+			t.setNumeroCuentaOrigen(rs.getString("numeroCuentaOrigen"));
+			t.setNumeroCuentaDestino(rs.getString("numeroCuentaDestino"));
+			t.setFecha(rs.getDate("Fecha"));
 			listTransfers.add(t);
 		}
 		
 		return listTransfers;
 		
 	}
+	
+	
+	
 	
 	public List<UpdateMonedero> listUpdatesMonedero(Usuario user) throws SQLException{
 		

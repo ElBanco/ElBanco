@@ -19,24 +19,17 @@
 		<h1  title="ElBanco" > 
 			ErBanco
 		</h1> 
-		<p>${pageContext.request.contextPath} </p>
 	</div> 
 
 	<div class="login-page">
 	  <div class="form" >
 		<form action="/ElBanco/login" method="POST" class="login-form">
-		  <input type="text" placeholder="username"/>
-		  <input type="password" placeholder="password"/>
-		  <button>login</button>
-		</form>
-		<form action="/ElBanco/login" method="POST">
-		User : <input name="username" type="text"/> 
-		Password : <input name="password" type="password"/>
-		<input type="submit" />
+		  <input type="text" name="username" placeholder="username"/>
+		  <input type="password" name="password" placeholder="password"/>
+		  <input type="submit" value="Login"/>
 		</form>
 	  </div>
 	</div>
-
 
 </body>
 </html>

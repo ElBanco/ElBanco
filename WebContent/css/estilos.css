@@ -110,6 +110,26 @@
 	display: flex; align-items: center; justify-content: center; font-family:'Francois One'; color: white; font-size: 500%; text-shadow: 1px 1px #0000cc; background:#6699ff; margin-bottom:0%; padding:1%;
 }
 
+ #carrousel1{ 
+	display: flex; align-items: center; justify-content: center; font-family:'Francois One'; color: white; font-size: 500%; text-shadow: 1px 1px #0000cc; margin-bottom:0%; padding:1%; position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#carrousel2{
+	display: flex; align-items: center; justify-content: center; font-family:'Francois One'; color: #6699ff; font-size: 550%; text-shadow: 1px 1px #0000cc; margin-bottom:0%; padding:1%; position: absolute;
+	top: 40%;
+    left: 40%;
+    transform: translate(-40%, -40%);
+}
+
+#carrousel3{
+	display: flex; align-items: center; justify-content: center; font-family:'Francois One'; color: #ddd; font-size: 500%; text-shadow: 1px 1px #0000cc; margin-bottom:0%; padding:1%; position: absolute;
+	top: 30%;
+    left: 10%;
+    transform: translate(-30%, -10%);
+}
+
 #stands {
   background:#EEE; /* fallback for old browsers */
   font-family: "Roboto", sans-serif;
