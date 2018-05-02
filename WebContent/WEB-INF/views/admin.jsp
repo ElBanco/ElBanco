@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
 <title>Admin</title>
@@ -9,6 +10,115 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="resources/css/estilos.css" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet">
+  
+  <script language="Javascript" type="text/javascript">
+  	<c:if test="${not empty message}">
+    	window.onload = alert("${message}")
+	</c:if>
+	
+	function isBlank(str) {
+		return !str.replace(/^\s+/g, '').length
+	}
+	
+	function validateEmail(email) {
+  		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  		return re.test(email);
+	}
+	
+	function phonenumber(inputtxt) {
+  		return inputtxt.match(/\d/g).length===9
+  		
+	}
+	
+	function validateSaldo(input){
+	
+		var saldo = parseFloat(input.value)
+    	
+    	if(isNaN(saldo)){
+    		console.log("nan");
+    		return false;
+    	}else if(saldo < 0){
+    		console.log("negativo");
+    		return false;
+    	}else{
+    		input.value = saldo;
+    	}
+    	
+    	return true;
+	}
+	
+	function validateUserForm(){
+    
+    	var form = document.getElementById('user_form');
+    	var inputs = form.getElementsByTagName('input');
+    	var result = true;
+    	
+    	for (var i = 0; i < inputs.length; i++) {
+    		var input = inputs[i];
+    		console.log(input.name);
+    		if (input.name == 'nombreUsuario'){
+    			console.log(input.value);
+    			if(isBlank(input.value)){
+    				console.log("nombre");
+    				result = false;
+    				break;
+    			}
+    		}else if(input.name == 'nombre'){
+
+    			if(isBlank(input.value)){
+    				console.log("nombre");
+    				result = false;
+    				break;
+    			}
+    		}else if(input.name == 'apellidos'){
+
+    			if(isBlank(input.value)){
+    				console.log("apellidos");
+    				result = false;
+    				break;
+    			}
+    		}else if(input.name == 'email'){
+
+    			if(!validateEmail(input.value)){
+    				console.log("email");
+    				result = false;
+    				break;
+    			}
+    		}else if(input.name == 'telefono'){
+
+    			if(!phonenumber(input.value)){
+    				console.log("telefono");
+    				result = false;
+    				break;
+    			}
+    		}else if(input.name == 'direccion'){
+ 
+    			if(isBlank(input.value)){
+    				console.log("direccion");
+    				result = false;
+    				break;
+    			}
+    		}else if(input.name == 'cantidadDinero'){
+
+    			if(!validateSaldo(input)){
+    				console.log("cantidad");
+    				result = false;
+    				break;
+    			}
+    		}
+    		
+    	}
+    	
+    	if(result){
+    		console.log("paso");
+    	}else{
+    		console.log("no paso");
+    		return false;
+    	}
+   		
+    }
+  </script>
+  
 </head>
 <body>
 <div class="Other-page">
@@ -25,7 +135,7 @@
 	  <div class="form-lg" >
 	<h3>Anadir nuevo cliente</h3>
 	<br />
-	<form action="/ElBanco/admin" method="POST">
+	<form action="/ElBanco/admin" method="POST" id="user_form" onsubmit="return validateUserForm()">
 	<div class="row">
 	<div class="col-6">
 		Nombre Usuario <input name="nombreUsuario" type="text"/>
@@ -52,101 +162,13 @@
 		</div>
 		</div>
 		<!--<input type="submit" name="action" value="addUser" />-->
-		<button type="submit" name="action" value="addUser">Añadir usuario</button>
+		<button type="submit" name="action" value="addUser">Aï¿½adir usuario</button>
 	</form>
+	<button id="blackbutton" onclick="validateUserForm()">Prueba</button>
 </div>
 
 	  <div class="form-lg" >
 	
-	
-	<h3>Crear <b>Cuenta</b> a un usuario ya creado</h3>
-	
-	<br />
-	<form action="/ElBanco/admin" method="POST">
-	<div class="row">
-	<div class="col-6">
-		Nombre Usuario  <input name="nombreUsuario" type="text"/> </div>
-	<div class="col-6">
-		Saldo <input name="saldo" type="text"/> </div>
-</div>
-		<!-- <input type="submit" name="action" value="addNewAccount"/> -->
-		<button type="submit" name="action" value="addNewAccount">Añadir cuenta</button>
-		
-	</form>
-	<br />
-	
-</div>
-
-	  <div class="form-lg" >
-	
-		<h3>Añadir <b>Tarjeta de Debito</b> a una cuenta ya creada</h3>
-	
-	<br />
-	
-	<form action="/ElBanco/admin" method="POST">
-	<div class="row">
-	<div class="col-6">
-		Titular  <input name="titular" type="text"/> </div>
-	<div class="col-6">
-		Numero Cuenta <input name="numeroCuenta" type="text"/> </div>
-</div>
-		<!-- <input type="submit" name="action" value="addDebitCard"/>-->
-		<button type="submit" name="action" value="addDebitCard">Añadir tarjeta</button>
-	</form>
-	<br />
-	
-</div>
-
-	  <div class="form-lg" >
-	
-		<h3>Dar de Baja a un Usuario</h3>
-	<br />
-	<form action="/ElBanco/admin" method="POST">
-	
-		Nombre de Usuario  <input name="nombreUsuario" type="text"/> <br />
-
-		<!-- <input type="submit" name="action" value="darBajaUser"/>-->
-		<button type="submit" name="action" value="darBajaUser">Dar usuario de baja</button>
-	</form>
-	<br />
-	
-</div>
-
-	  <div class="form-lg" >
-	<h3>Dar de Baja a una Cuenta</h3>
-	<br />
-	<form action="/ElBanco/admin" method="POST">
-	
-		Numero de Cuenta  <input name="numeroCuenta" type="text"/> <br />
-
-		<!-- <input type="submit" name="action" value="darBajaCuenta"/>-->
-		<button type="submit" name="action" value="darBajaCuenta">Dar cuenta de baja</button>
-	</form>
-	<br />
-	
-</div>
-
-	  <div class="form-lg" >
-	<h3>Dar de Baja a una Tarjeta (Debito o Monedero)</h3>
-	<br />
-	<form action="/ElBanco/admin" method="POST">
-	
-		Numero de Tarjeta  <input name="numeroTarjeta" type="text"/> <br />
-
-		<!-- <input type="submit" name="action" value="darBajaTarjeta"/>-->
-		<button type="submit" name="action" value="darBajaTarjeta">Dar tarjeta de baja</button>
-	</form>
-	<br />
-	
-</div>
-
-	  <div class="form-lg" >
-	<form action="/ElBanco/logout" method="GET">
-		<!-- <input value="LOGOUT" type="submit" />-->
-		<button type="submit" value="LOGOUT">LOGOUT</button>
-	</form>
-	</div>
-	</div>
 	
 </body>
 </html>

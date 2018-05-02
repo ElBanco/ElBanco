@@ -14,50 +14,62 @@
   
   <script language="Javascript" type="text/javascript"> 
   
- 	var cardFormVisible = true;
- 	var accountFormVisible = true;
+	<c:if test="${not empty message}">
+    	window.onload = alert("${message}")
+	</c:if>
  	
-    function addCardForm(divName){ 
+    function toggleDiv(divName){
     
-    	if (cardFormVisible) {
-    		var newdiv = document.createElement('div');
-    		newdiv.setAttribute('id','CardFormDiv');
-        	newdiv.innerHTML = "Titular <input type='text' name='titular'/> <br /><button type='submit' name='action' value='addDebitCard'>Confirmar</button>";
-        	document.getElementById(divName).appendChild(newdiv);
-        	cardFormVisible = false;
-    	}else{
-    		console.log("entro");
-    		document.getElementById('CardFormDiv').remove();
-			cardFormVisible = true;
-    	}
+    	var div = document.getElementById(divName);
+    	div.style.display = div.style.display == "none" ? "block" : "none";
     	
     } 
     
-    function addAccountForm(divName){ 
+    function validateCardForm(divName){
     
-    	if (accountFormVisible) {
-    		var newdiv = document.createElement('div');
-    		newdiv.setAttribute('id','AccountFormDiv');
-        	newdiv.innerHTML = "Saldo <input type='text' name='saldo'/> <br /><button type='submit' name='action' value='addAccount'>Confirmar</button>";
-        	document.getElementById(divName).appendChild(newdiv);
-        	accountFormVisible = false;
-    	}else{
-    		console.log("entro");
-    		document.getElementById('AccountFormDiv').remove();
-			accountFormVisible = true;
+    	var form = document.getElementById(divName).getElementsByTagName('form')[0];
+    	var input = form.getElementsByTagName('input')[0];
+    	
+    	if(input.value == ""){
+    		return false;
     	}
     	
-    } 
-    
-    function sendPost(url, params){
-    console.log('asdf')
-    	var http = new XMLHttpRequest();
-    	http.open("POST", url, true);
-    	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    	http.send(params);
     }
-
-
+    
+    function validateAccountForm(divName){
+    
+    	var form = document.getElementById(divName).getElementsByTagName('form')[0];
+    	var input = form.getElementsByTagName('input')[0];
+    	var saldo = parseFloat(input.value)
+    	
+    	if(input.value == ""){
+    		console.log("vacio");
+    		return false;
+    	}else if(isNaN(saldo)){
+    		console.log("nan");
+    		return false;
+    	}else if(saldo < 0){
+    		console.log("negativo");
+    		return false;
+    	}else{
+    		console.log("bien");
+    		input.value = saldo;
+    	}
+    	
+    }
+    
+    function validateBaja(divName){
+    
+    	var bajaDiv = document.getElementById('baja_' + divName);
+    	var span = bajaDiv.getElementsByTagName('span')[0];
+    	console.log(span.innerHTML);
+    	
+    	if(span.innerHTML != ""){
+    		return false;
+    	}
+    	
+    }
+    
   </script> 
   
    </head>
@@ -84,24 +96,28 @@
 	  <span>${client.email}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Teléfono</h6>
+	  <h6>Telï¿½fono</h6>
 	  <span>${client.telefono}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha Creación</h6>
+	  <h6>Fecha Creaciï¿½n</h6>
 	  <span>${client.fechaCreacion}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha modificación</h6>
+	  <h6>Fecha modificaciï¿½n</h6>
 	  <span>${client.fechaCreacion}</span>
 	  </div>
-	  <div class="col-4">
+	  <div class="col-4" id="baja_${client.nombreUsuario}">
 	  <h6>Fecha baja</h6>
 	  <span>${client.fechaBaja}</span>
 	  </div>
 	  </div>
 	   <br/>	  	   
-	  <button id="blackbutton" onclick="sendPost('/ElBanco/admin/client_info', 'action=darBajaUsuario&nombreUsuarioBaja=${client.nombreUsuario}')">Dar usuario de baja</button>
+	  
+	  <form action="/ElBanco/admin/client_info?action=darBajaUsuario" method="POST" onsubmit="return validateBaja('${client.nombreUsuario}')">
+	  <input type="hidden" name="nombreUsuario" value="${client.nombreUsuario}">
+	  <input type="submit" value="Dar usuario de baja" id="blackbutton">
+	  </form>
 	
 	  </div>
 	  <div class="form-lg" >
@@ -110,7 +126,7 @@
   	  <div class="form-lg">
 	  <div class="row">
 	  <div class="col-3">
-	  <h6>Número de cuenta</h6>
+	  <h6>Nï¿½mero de cuenta</h6>
 	  <span>${cuenta.numeroCuenta}</span>
 	  </div>
 	  <div class="col-3">
@@ -118,22 +134,22 @@
 	  <span>${cuenta.saldo}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Límite diario</h6>
+	  <h6>Lï¿½mite diario</h6>
 	  <span>${cuenta.limiteDiario}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Límite inferior</h6>
+	  <h6>Lï¿½mite inferior</h6>
 	  <span>${cuenta.limiteInferior}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Fecha creación</h6>
+	  <h6>Fecha creaciï¿½n</h6>
 	  <span>${cuenta.fechaCreacion}</span>
 	  </div>
 	  <div class="col-3">
-	  <h6>Fecha modificación</h6>
+	  <h6>Fecha modificaciï¿½n</h6>
 	  <span>${cuenta.fechaModificacion}</span>
 	  </div>
-	  <div class="col-3">
+	  <div class="col-3" id="baja_${cuenta.numeroCuenta}">
 	  <h6>Fecha baja</h6>
 	  <span>${cuenta.fechaBaja}</span>
 	  </div>
@@ -141,17 +157,25 @@
 	  <br/>
 	  <div class="row">
 	  <div class="col-6">
-	  <button id="blackbutton" onclick="addCardForm('${cuenta.numeroCuenta}')">Crear tarjeta</button>
+	  <button id="blackbutton" onclick="toggleDiv('${cuenta.numeroCuenta}')">Crear tarjeta</button>
 	  
-	  <form action="/ElBanco/admin/client_info" method="POST"> 
+	  <div id="${cuenta.numeroCuenta}" style="display: none;">
+	  <form action="/ElBanco/admin/client_info?action=addDebitCard" method="POST" onsubmit="return validateCardForm('${cuenta.numeroCuenta}')">
+	  Titular: <input type='text' name='titular'/>
 	  <input type="hidden" name="numeroCuenta" value="${cuenta.numeroCuenta}">
-	  <div id="${cuenta.numeroCuenta}"> </div>
-	  </form> 
+	  <input type="submit" value="Enviar" id="blackbutton">
+	  </form>
+	  </div>
 	  
 	  </div>
 	  
 	  <div class="col-6">
-	  <button id="blackbutton" onclick="sendPost('/ElBanco/admin/client_info', 'action=darBajaCuenta&numeroCuenta=${cuenta.numeroCuenta}')">Dar cuenta de baja</button>
+	  
+	  <form action="/ElBanco/admin/client_info?action=darBajaCuenta" method="POST" onsubmit="return validateBaja('${cuenta.numeroCuenta}')">
+	  <input type="hidden" name="numeroCuenta" value="${cuenta.numeroCuenta}">
+	  <input type="submit" value="Dar cuenta de baja" id="blackbutton">
+	  </form>
+	  
 	  </div>
 	  </div>
 	  </div>
@@ -205,12 +229,15 @@
       </c:forEach>
       
 	  <br/>
-		  <button id="blackbutton" onclick="addAccountForm('${client.nombreUsuario}')">Añadir cuenta</button>
+		  <button id="blackbutton" onclick="toggleDiv('${client.nombreUsuario}')">Aï¿½adir cuenta</button>
 		  
-		  <form action="/ElBanco/admin/client_info" method="POST"> 
-	  		<input type="hidden" name="nombreUsuario" value="${client.nombreUsuario}">
-	  		<div id="${client.nombreUsuario}"> </div>
-	  	  </form> 
+		  <div id="${client.nombreUsuario}" style="display: none;">
+	  	  <form action="/ElBanco/admin/client_info?action=addAccount" method="POST" onsubmit="return validateAccountForm('${client.nombreUsuario}')">
+	  	  Saldo: <input type='text' name='saldo'/>
+	  	  <input type="hidden" name="nombreUsuario" value="${client.nombreUsuario}">
+	  	  <input type="submit" value="Enviar" id="blackbutton">
+	  	  </form>
+	  	  </div>
 	
 	  </div>
 	  	  <div class="form-lg" >
@@ -226,7 +253,7 @@
       
 	  <div class="row">
 	  <div class="col-12">
-	  <h6>Número de tarjeta</h6>
+	  <h6>Nï¿½mero de tarjeta</h6>
 	  <span>${monedero.numeroTarjeta}</span>
 	  </div>
 	  <div class="col-4">
@@ -246,16 +273,20 @@
 	  <span>${monedero.fechaCancelacion}</span>
 	  </div>
 	  <div class="col-4">
-	  <h6>Fecha creación</h6>
+	  <h6>Fecha creaciï¿½n</h6>
 	  <span>${monedero.fechaCreacion}</span>
 	  </div>
-	  <div class="col-4">
+	  <div class="col-4" id="baja_${monedero.numeroTarjeta}">
 	  <h6>Fecha baja</h6>
 	  <span>${monedero.fechaBaja}</span>
 	  </div>
 	  </div>
 	   <br/>
-		  <button id="blackbutton" onclick="sendPost('/ElBanco/admin/client_info', 'action=darBajaMonedero&monedero=${monedero.numeroTarjeta}')">Dar de baja</button>
+		  
+		  <form action="/ElBanco/admin/client_info?action=darBajaMonedero" method="POST" onsubmit="return validateBaja('${monedero.numeroTarjeta}')">
+	  	  <input type="hidden" name="monedero" value="${monedero.numeroTarjeta}">
+	  	  <input type="submit" value="Dar monedero de baja" id="blackbutton">
+	     </form>
 	
 	
 	  </div>

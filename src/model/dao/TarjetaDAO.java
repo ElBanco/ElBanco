@@ -209,19 +209,12 @@ public class TarjetaDAO extends DAO{
 	
 	public boolean darBajaTarjeta(final String numeroTarjeta) throws SQLException {
 			
-		if (checkUnique(numeroTarjeta, GET_TARJETA)){
-			
-			DatesHelper datesHelper = new DatesHelper();
-			PreparedStatement stmt = conn.prepareStatement(DAR_BAJA_TARJETA);
-			stmt.setDate(1, datesHelper.getSqlDate());
-			stmt.setString(2, numeroTarjeta);
-			stmt.executeUpdate();
-			stmt.close();
-			
-		}
-		else{
-			return false;
-		}
+		DatesHelper datesHelper = new DatesHelper();
+		PreparedStatement stmt = conn.prepareStatement(DAR_BAJA_TARJETA);
+		stmt.setDate(1, datesHelper.getSqlDate());
+		stmt.setString(2, numeroTarjeta);
+		stmt.executeUpdate();
+		stmt.close();
 		
 		return true;
 	}

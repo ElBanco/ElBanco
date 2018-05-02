@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import service.UpdateResult;
 import service.Cuenta.AccountService;
@@ -78,8 +79,24 @@ public class ClientInfoServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String username = req.getParameter("nombreUsuario");
-		Usuario client = new UserService().getUser(username);
+		String username = null;
+		Usuario client = null;
+		HttpSession session = req.getSession();
+		
+		if(req.getParameter("nombreUsuario") != null){
+			client = new UserService().getUser(req.getParameter("nombreUsuario"));
+			if(client != null){
+				username = req.getParameter("nombreUsuario");
+				session.setAttribute("nombreUsuario", username);
+			}
+		}else if(session.getAttribute("nombreUsuario") != null){
+			client = new UserService().getUser((String) session.getAttribute("nombreUsuario"));
+			if(client != null){
+				username = (String) session.getAttribute("nombreUsuario");
+				req.setAttribute("message", session.getAttribute("message"));
+				session.setAttribute("message", null);
+			}
+		}
 
 		if(client != null){
 			List<Cuenta> cuentas = new AccountService().getAccounts(username);
@@ -105,31 +122,51 @@ public class ClientInfoServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		String action = req.getParameter("action");
 		String numeroCuenta = req.getParameter("numeroCuenta");
-		String nombreUsuarioBaja = req.getParameter("nombreUsuarioBaja");
+		String nombreUsuario = req.getParameter("nombreUsuario");
+		String message = "";
 		
 		if(action.equals("addDebitCard")){
 			String titular = req.getParameter("titular");
-			addDebitCard(titular, numeroCuenta);
+			if(addDebitCard(titular, numeroCuenta)){
+				message = "Tarjeta añadida con exito";
+			}else{
+				message = "Error añadiendo tarjeta";
+			}
 		}else if(action.equals("darBajaCuenta")){
 			if(darBajaCuenta(numeroCuenta)){
-				System.out.println("dar baja Cuenta");
-			}
-		}else if(action.equals("darBajaUsuario")){
-			if(darBajaUsuario(nombreUsuarioBaja)){
-				System.out.println("User dado de baja");
+				message = "Cuenta dada de baja con exito";
+			}else{
+				message = "Error dando de baja cuenta";
 			}
 		}else if(action.equals("darBajaMonedero")){
 			String monedero = req.getParameter("monedero");
+			System.out.println(monedero);
 			if(darBajaMonedero(monedero)){
-				System.out.println("dar baja Cuenta");
+				message = "Monedero dado de baja con exito";
+			}else{
+				message = "Error dando de baja monedero";
+			}
+		}else if(action.equals("darBajaUsuario")){
+			if(darBajaUsuario(nombreUsuario)){
+				message = "Usuario dado de baja con exito";
+			}else{
+				message = "Error dando de baja usuario";
 			}
 		}else if(action.equals("addAccount")){
 			Double saldo = Double.valueOf(req.getParameter("saldo"));
-			String nombreUsuario = req.getParameter("nombreUsuario");
-			addAccount(nombreUsuario, saldo);
+			if(addAccount(nombreUsuario, saldo)){
+				message = "Cuenta añadida con exito";
+			}else{
+				message = "Error añadiendo cuenta";
+			}
 		}
+		
+		HttpSession session = req.getSession();
+		session.setAttribute("message", message);
+		resp.sendRedirect("/ElBanco/admin/client_info");
 		
 		
 	}

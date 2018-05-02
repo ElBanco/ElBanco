@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import service.*;
 import service.Cuenta.AccountService;
@@ -64,51 +65,35 @@ public class AdminServlet extends HttpServlet{
 				return debitCard;
 			}
 	
-	private void handleAddUserResult(UserUpdateResult result, HttpServletResponse resp) throws IOException{
+	private String handleAddUserResult(UserUpdateResult result, HttpServletResponse resp) throws IOException{
 		
-		PrintWriter out = resp.getWriter();
+		String message = "";
 		
 		if(result.isSuccessfulUpdate()){
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Prueba</title>");
-			out.println("</head>");
-			out.println("<body>");
-			out.println("Valid User");
-			out.println("</body>");
-			out.println("</html>");
-			return;
+			message = "Usuario añadido con exito";
+			return message;
 		}
 		
 		
 		switch (result.getError()) {
 		
 			case DUPLICATED_USER:
-				out.println("<html>");
-				out.println("<head>");
-				out.println("<title>Prueba</title>");
-				out.println("</head>");
-				out.println("<body>");
-				out.println("DUPLICATED_USER");
-				out.println("</body>");
-				out.println("</html>");
+				message = "El usuario ya existe";
 				break;
 	
 			case DUPLICATED_EMAIL:
-				out.println("<html>");
-				out.println("<head>");
-				out.println("<title>Prueba</title>");
-				out.println("</head>");
-				out.println("<body>");
-				out.println("DUPLICATED_EMAIL");
-				out.println("</body>");
-				out.println("</html>");
+				message = "Dirección de correo no disponible";
 				break;
 				
 			default:
+				message = "Error desconocido";
 				break;
 			
 		}
+		
+		System.out.println(message);
+		
+		return message;
 	}
 	
 	private Usuario createUser(HttpServletRequest req){
@@ -149,6 +134,9 @@ public class AdminServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = req.getSession();
+		req.setAttribute("message", session.getAttribute("message"));
+		session.setAttribute("message", null);
 		req.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(req, resp);
 	}
 
@@ -156,57 +144,18 @@ public class AdminServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//Usuario newUser = createUser(req);
-		//if(newUser != null && req.getParameter("cantidadDinero") != null){
-			//UserUpdateResult result = new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
-			//handleAddUserResult(result, resp);
-		//}
-		//req.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(req, resp);
+		Usuario newUser = createUser(req);
+		String message = "Parametros incompletos";
 		
-				String actionValue = req.getParameter("action");
-				if (actionValue.equals("addUser")){
-					
-					Usuario newUser = createUser(req);
-					if(newUser != null && req.getParameter("cantidadDinero") != null){
-						new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
-					}
-				}
-				//Este lo hice pero no vale para mucho
-				else if(actionValue.equals("bindAccount")){
-					
-					
-				}
-				else if(actionValue.equals("addNewAccount")){
-					
-					Cuenta newAccount = createAccount(req);
-					new AccountService().addNewAccount(newAccount);
-					
-				}
-				else if(actionValue.equals("addMonedero")){
-					
-					
-				}
-				else if(actionValue.equals("addDebitCard")){
-					
-					TarjetaDebito debitCard = createDebitCard(req);
-					new CardService().addNewDebitCard(debitCard);
-					
-				}
-				else if(actionValue.equals("darBajaUser")){
-					
-					new UserService().darBajaUser(req.getParameter("nombreUsuario"));
+		if(newUser != null && req.getParameter("cantidadDinero") != ""){
+			UserUpdateResult result = new UserService().addNewUser(newUser, Double.valueOf(req.getParameter("cantidadDinero")));
+			message = handleAddUserResult(result, resp);
+		}
 		
-				}
-				else if(actionValue.equals("darBajaCuenta")){
-					
-					new AccountService().darBajaCuenta(req.getParameter("numeroCuenta"));
-				
-		 		}	 		
-				else if(actionValue.equals("darBajaTarjeta")){
-					
-					new CardService().darBajaTarjeta(req.getParameter("numeroTarjeta"));
-					
-				}
+		HttpSession session = req.getSession();
+		session.setAttribute("message", message);
+		resp.sendRedirect("/ElBanco/admin");
+		
 				
 	}
 
